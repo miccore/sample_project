@@ -1,0 +1,17 @@
+global using Miccore.Clean.Sample.Core.Entities;
+global using Miccore.Clean.Sample.Core.Entities.Base;
+global using Miccore.Clean.Sample.Core.Enums;
+global using Miccore.Clean.Sample.Core.Exceptions;
+global using Miccore.Clean.Sample.Core.Extensions;
+global using Miccore.Clean.Sample.Core.Helpers;
+global using Miccore.Clean.Sample.Core.Repositories;
+global using Miccore.Clean.Sample.Core.Repositories.Base;
+global using Miccore.Clean.Sample.Infrastructure.Persistence;
+global using Miccore.Clean.Sample.Infrastructure.Repositories;
+global using Miccore.Clean.Sample.Infrastructure.Repositories.Base;
+global using Miccore.Pagination.Model;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.DependencyInjection.Extensions;
+global using System.Linq.Expressions;

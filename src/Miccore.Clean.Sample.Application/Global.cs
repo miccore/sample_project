@@ -1,0 +1,11 @@
+global using AutoMapper;
+global using MediatR;
+global using Miccore.Clean.Sample.Core.Entities;
+global using Miccore.Clean.Sample.Core.Entities.Base;
+global using Miccore.Clean.Sample.Core.Enums;
+global using Miccore.Clean.Sample.Core.Extensions;
+global using Miccore.Clean.Sample.Core.Repositories;
+global using Miccore.Pagination.Model;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using System.Reflection;
