@@ -46,7 +46,7 @@ public class UpdateSampleCommandHandlerTests
         var command = null as UpdateSampleCommand;
 
         // Act & Assert
-        await FluentActions.Invoking(() => _handler.Handle(command, CancellationToken.None))
+        await FluentActions.Invoking(() => _handler.Handle(command!, CancellationToken.None))
             .Should().ThrowAsync<ApplicationException>();
     }
 

@@ -47,7 +47,7 @@ public class CreateSampleCommandHandlerTests
         var command = null as CreateSampleCommand;
 
         // Act & Assert
-        var ex = await Assert.ThrowsAsync<ApplicationException>(() => _handler.Handle(command, CancellationToken.None));
+        var ex = await Assert.ThrowsAsync<ApplicationException>(() => _handler.Handle(command!, CancellationToken.None));
 
         ex.Message.Should().Be(ExceptionEnum.MapperIssue.GetEnumDescription());
     }

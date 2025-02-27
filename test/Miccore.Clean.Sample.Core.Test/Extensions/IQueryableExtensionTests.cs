@@ -50,7 +50,7 @@ namespace Miccore.Clean.Sample.Core.Tests.Extensions
             mockSet.As<IQueryable<SampleEntity>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
 
             // Act
-            var result = mockSet.Object.ApplyIncludes(null);
+            var result = mockSet.Object.ApplyIncludes(null!);
 
             // Assert
             result.Should().NotBeNull();

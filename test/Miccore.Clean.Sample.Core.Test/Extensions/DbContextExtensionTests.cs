@@ -32,7 +32,7 @@ namespace Miccore.Clean.Sample.Core.Tests.Extensions
         {
             // Arrange
             var originalEntity = new SampleEntity { Id = Guid.NewGuid(), Name = "Original", Age = 25 };
-            var updatedEntity = new SampleEntity { Id = originalEntity.Id, Name = null, Age = 30 };
+            var updatedEntity = new SampleEntity { Id = originalEntity.Id, Name = null!, Age = 30 };
 
             // Act
             var result = originalEntity.SetUpdatedValues(updatedEntity);
