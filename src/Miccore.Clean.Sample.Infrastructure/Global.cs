@@ -6,7 +6,7 @@ global using Miccore.Clean.Sample.Core.Extensions;
 global using Miccore.Clean.Sample.Core.Helpers;
 global using Miccore.Clean.Sample.Core.Repositories;
 global using Miccore.Clean.Sample.Core.Repositories.Base;
-global using Miccore.Clean.Sample.Infrastructure.Persistence;
+global using Miccore.Clean.Sample.Infrastructure.Persistance;
 global using Miccore.Clean.Sample.Infrastructure.Repositories;
 global using Miccore.Clean.Sample.Infrastructure.Repositories.Base;
 global using Miccore.Pagination.Model;

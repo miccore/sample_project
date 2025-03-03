@@ -1,7 +1,7 @@
 using Miccore.Clean.Sample.Core.Exceptions;
 using Miccore.Clean.Sample.Infrastructure.Repositories.Base;
 using Miccore.Pagination.Model;
-using Miccore.Clean.Sample.Infrastructure.Persistence;
+using Miccore.Clean.Sample.Infrastructure.Persistance;
 using Miccore.Clean.Sample.Core.Entities;
 using Miccore.Clean.Sample.Infrastructure.Tests.Persistances;
 using Moq;

@@ -1,4 +1,4 @@
-namespace Miccore.Clean.Sample.Infrastructure.Persistence
+namespace Miccore.Clean.Sample.Infrastructure.Persistance
 {
     /// <summary>
     /// Database context registration
