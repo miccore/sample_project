@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{FA4A16FA-4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Miccore.Clean.Sample.Infrastructure.Tests", "test\Miccore.Clean.Sample.Infrastructure.Tests\Miccore.Clean.Sample.Infrastructure.Tests.csproj", "{183598AF-3649-4C85-97FE-F2BF4D01ECE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Miccore.Clean.Sample.Core.Tests", "test\Miccore.Clean.Sample.Core.Test\Miccore.Clean.Sample.Core.Tests.csproj", "{D91C6FD9-9CE0-455A-B6DD-F636E7C7AE44}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Miccore.Clean.Sample.Core.Tests", "test\Miccore.Clean.Sample.Core.Tests\Miccore.Clean.Sample.Core.Tests.csproj", "{D91C6FD9-9CE0-455A-B6DD-F636E7C7AE44}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Miccore.Clean.Sample.Application.Tests", "test\Miccore.Clean.Sample.Application.Tests\Miccore.Clean.Sample.Application.Tests.csproj", "{1985829A-8FAD-450C-9C23-2282C81F6DDD}"
 EndProject
