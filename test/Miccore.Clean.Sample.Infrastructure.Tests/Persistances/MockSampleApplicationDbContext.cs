@@ -1,7 +1,3 @@
-
-
-
-
 using System.Linq.Expressions;
 using Miccore.Clean.Sample.Core.Entities;
 using Miccore.Clean.Sample.Infrastructure.Persistance;
