@@ -11,6 +11,9 @@ builder.Services.AddFastEndpoints().SwaggerDocument();
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 
+#region builder configuration
+#endregion
+
 
 // Add Middlewares
 var app = builder.Build();

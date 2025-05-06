@@ -24,4 +24,8 @@
     <ProjectReference Include="..\Miccore.Clean.Sample.Infrastructure\Miccore.Clean.Sample.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    
+  </ItemGroup>
+
 </Project>
