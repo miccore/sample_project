@@ -33,8 +33,8 @@ namespace Miccore.Clean.Sample.Core.Tests.ApiModels
             // Assert
             response.Data.Should().BeNull();
             response.Errors.Should().HaveCount(1);
-            response.Errors.First().Code.Should().Be((int)httpStatus);
-            response.Errors.First().Message.Should().Be(message);
+            response.Errors!.First().Code.Should().Be((int)httpStatus);
+            response.Errors!.First().Message.Should().Be(message);
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Miccore.Clean.Sample.Core.Tests.ApiModels
             // Assert
             response.Data.Should().BeNull();
             response.Errors.Should().HaveCount(messages.Count);
-            response.Errors.Select(e => e.Message).Should().BeEquivalentTo(messages);
+            response.Errors!.Select(e => e.Message).Should().BeEquivalentTo(messages);
         }
 
         [Fact]

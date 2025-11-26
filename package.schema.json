@@ -1,0 +1,275 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Miccore Package Configuration",
+  "description": "Configuration schema for Miccore microservice projects",
+  "type": "object",
+  "required": ["company", "name", "version", "type", "projects"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "company": {
+      "type": "string",
+      "description": "Company name used as namespace prefix"
+    },
+    "name": {
+      "type": "string",
+      "description": "Architecture/solution name"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the solution"
+    },
+    "description": {
+      "type": "string",
+      "description": "Solution description"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["Single", "Microservice", "Modular"],
+      "description": "Architecture type"
+    },
+    "framework": {
+      "type": "string",
+      "pattern": "^net\\d+\\.\\d+$",
+      "description": ".NET framework version"
+    },
+    "environments": {
+      "type": "object",
+      "description": "Environment-specific configurations",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "baseUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Base URL for the environment"
+          },
+          "database": {
+            "type": "object",
+            "properties": {
+              "server": { "type": "string" },
+              "port": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "projects": {
+      "type": "array",
+      "description": "List of microservice projects",
+      "items": {
+        "type": "object",
+        "required": ["name", "port"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Project/microservice name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Project description"
+          },
+          "port": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65535,
+            "description": "HTTP port"
+          },
+          "healthCheck": {
+            "type": "string",
+            "description": "Health check endpoint path"
+          },
+          "swagger": {
+            "type": "string",
+            "description": "Swagger documentation endpoint"
+          },
+          "docker": {
+            "type": "object",
+            "properties": {
+              "image": {
+                "type": "string",
+                "description": "Docker image name"
+              },
+              "registry": {
+                "type": "string",
+                "description": "Docker registry URL"
+              },
+              "dockerfile": {
+                "type": "string",
+                "description": "Path to Dockerfile"
+              }
+            }
+          },
+          "kubernetes": {
+            "type": "object",
+            "properties": {
+              "serviceName": {
+                "type": "string",
+                "description": "Kubernetes service name"
+              },
+              "namespace": {
+                "type": "string",
+                "description": "Kubernetes namespace"
+              },
+              "replicas": {
+                "type": "object",
+                "properties": {
+                  "min": { "type": "integer", "minimum": 0 },
+                  "max": { "type": "integer", "minimum": 1 }
+                }
+              },
+              "resources": {
+                "type": "object",
+                "properties": {
+                  "requests": {
+                    "type": "object",
+                    "properties": {
+                      "cpu": { "type": "string" },
+                      "memory": { "type": "string" }
+                    }
+                  },
+                  "limits": {
+                    "type": "object",
+                    "properties": {
+                      "cpu": { "type": "string" },
+                      "memory": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "database": {
+            "type": "object",
+            "properties": {
+              "context": {
+                "type": "string",
+                "description": "EF Core DbContext class name"
+              },
+              "provider": {
+                "type": "string",
+                "enum": ["MySQL", "PostgreSQL", "SqlServer", "SQLite", "InMemory"],
+                "description": "Database provider"
+              },
+              "name": {
+                "type": "string",
+                "description": "Database name"
+              },
+              "migrationProject": {
+                "type": "string",
+                "description": "Project containing migrations"
+              }
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "List of dependent microservices"
+          },
+          "api": {
+            "type": "object",
+            "properties": {
+              "prefix": {
+                "type": "string",
+                "description": "API route prefix"
+              },
+              "versioning": {
+                "type": "boolean",
+                "description": "Enable API versioning"
+              },
+              "authentication": {
+                "type": "string",
+                "enum": ["None", "JWT", "OAuth2", "ApiKey"],
+                "description": "Authentication method"
+              }
+            }
+          },
+          "events": {
+            "type": "object",
+            "properties": {
+              "publishes": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Events published by this service"
+              },
+              "subscribes": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Events this service subscribes to"
+              }
+            }
+          }
+        }
+      }
+    },
+    "infrastructure": {
+      "type": "object",
+      "properties": {
+        "messaging": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "broker": {
+              "type": "string",
+              "enum": ["RabbitMQ", "Kafka", "AzureServiceBus", "AWS SQS"]
+            },
+            "connectionString": { "type": "string" }
+          }
+        },
+        "caching": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "provider": {
+              "type": "string",
+              "enum": ["InMemory", "Redis", "Memcached"]
+            }
+          }
+        },
+        "observability": {
+          "type": "object",
+          "properties": {
+            "tracing": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "provider": { "type": "string" }
+              }
+            },
+            "metrics": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "provider": { "type": "string" },
+                "endpoint": { "type": "string" }
+              }
+            },
+            "logging": {
+              "type": "object",
+              "properties": {
+                "provider": { "type": "string" },
+                "sinks": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "cli": {
+      "type": "object",
+      "properties": {
+        "commands": {
+          "type": "object",
+          "description": "CLI command shortcuts",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    }
+  }
+}

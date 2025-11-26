@@ -5,18 +5,21 @@ using Miccore.Clean.Sample.Core.Exceptions;
 using Miccore.Clean.Sample.Core.Repositories;
 using Moq;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 
 namespace Miccore.Clean.Sample.Application.Tests.Sample.Commands;
 
 public class UpdateSampleCommandHandlerTests
 {
     private readonly Mock<ISampleRepository> _sampleRepositoryMock;
+    private readonly Mock<ILogger<UpdateSampleCommandHandler>> _loggerMock;
     private readonly UpdateSampleCommandHandler _handler;
 
     public UpdateSampleCommandHandlerTests()
     {
         _sampleRepositoryMock = new Mock<ISampleRepository>();
-        _handler = new UpdateSampleCommandHandler(_sampleRepositoryMock.Object);
+        _loggerMock = new Mock<ILogger<UpdateSampleCommandHandler>>();
+        _handler = new UpdateSampleCommandHandler(_sampleRepositoryMock.Object, _loggerMock.Object);
     }
 
     [Fact]
@@ -40,14 +43,14 @@ public class UpdateSampleCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ShouldThrowApplicationException_WhenMapperFails()
+    public async Task Handle_ShouldThrowArgumentNullException_WhenCommandIsNull()
     {
         // Arrange
         var command = null as UpdateSampleCommand;
 
         // Act & Assert
         await FluentActions.Invoking(() => _handler.Handle(command!, CancellationToken.None))
-            .Should().ThrowAsync<ApplicationException>();
+            .Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Fact]

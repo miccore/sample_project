@@ -2,6 +2,7 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
 {
     /// <summary>
     /// Implementation of the core repository interface.
+    /// Soft delete filtering is handled automatically by the global query filter in DbContext.
     /// </summary>
     /// <typeparam name="T">The type of the entity.</typeparam>
     public class BaseRepository<T>(SampleApplicationDbContext context) : IBaseRepository<T> where T : BaseEntity
@@ -28,7 +29,8 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
         public async Task<T> DeleteAsync(Guid id)
         {
             var entity = await _context.Set<T>()
-                                        .FirstOrDefaultAsync(x => x.Id == id && (x.DeletedAt == 0 || x.DeletedAt == null)) ?? throw new NotFoundException(ExceptionEnum.NotFound.GetEnumDescription());
+                                        .FirstOrDefaultAsync(x => x.Id == id) 
+                            ?? throw new NotFoundException(ExceptionEnum.NotFound.GetEnumDescription());
         
             entity.DeletedAt = DateHelper.GetCurrentTimestamp();
         
@@ -39,14 +41,15 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
 
         /// <summary>
         /// Hard deletes entities that match the given expression.
+        /// Uses IgnoreQueryFilters to include soft-deleted entities.
         /// </summary>
         /// <param name="WhereExpression">The expression to filter entities.</param>
         public async Task DeleteHardAsync(Expression<Func<T, bool>> WhereExpression)
         {
             var entity = await _context.Set<T>()
                                     .AsNoTracking()
+                                    .IgnoreQueryFilters()
                                     .Where(WhereExpression)
-                                    .Where(x => x.DeletedAt == 0 || x.DeletedAt == null)
                                     .ToListAsync();
 
             _context.RemoveRange(entity);
@@ -62,10 +65,9 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
         /// <returns>A paginated list of entities.</returns>
         public async Task<PaginationModel<T>> GetAllAsync(PaginationQuery query, params string[] includes)
         {
-            var entities =  await _context.Set<T>()
+            var entities = await _context.Set<T>()
                                         .AsNoTracking()
                                         .ApplyIncludes(includes)
-                                        .Where(x => x.DeletedAt == 0 || x.DeletedAt == null)
                                         .PaginateAsync(query);
     
             return entities;
@@ -81,7 +83,8 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
         {
             var entity = await _context.Set<T>()
                                         .ApplyIncludes(includes)
-                                        .FirstOrDefaultAsync(x => x.Id == id && (x.DeletedAt == 0 || x.DeletedAt == null)) ?? throw new NotFoundException(ExceptionEnum.NotFound.GetEnumDescription());
+                                        .FirstOrDefaultAsync(x => x.Id == id) 
+                            ?? throw new NotFoundException(ExceptionEnum.NotFound.GetEnumDescription());
             return entity;
         }
 
@@ -94,11 +97,10 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
         /// <returns>A paginated list of entities.</returns>
         public async Task<PaginationModel<T>> GetAllByParametersPaginatedAsync(PaginationQuery query, Expression<Func<T, bool>> WhereExpression, params string[] includes)
         {
-            var entities =  await _context.Set<T>()
+            var entities = await _context.Set<T>()
                                         .AsNoTracking()
                                         .ApplyIncludes(includes)
                                         .Where(WhereExpression)
-                                        .Where(x => x.DeletedAt == 0 || x.DeletedAt == null)
                                         .PaginateAsync(query);
             return entities;
         }
@@ -111,10 +113,10 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
         /// <returns>A list of entities.</returns>
         public async Task<List<T>> GetAllByParametersAsync(Expression<Func<T, bool>> WhereExpression, params string[] includes)
         {
-            var entities =  await _context.Set<T>()
+            var entities = await _context.Set<T>()
                                         .AsNoTracking()
                                         .ApplyIncludes(includes)
-                                        .Where(WhereExpression).Where(x => x.DeletedAt == 0 || x.DeletedAt == null)
+                                        .Where(WhereExpression)
                                         .ToListAsync();
             return entities;
         }
@@ -131,12 +133,11 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
                                         .AsNoTracking()
                                         .ApplyIncludes(includes)
                                         .Where(WhereExpression)
-                                        .FirstOrDefaultAsync(x => x.DeletedAt == 0 || x.DeletedAt == null)
-                                         ?? throw new NotFoundException(ExceptionEnum.NotFound.GetEnumDescription());
+                                        .FirstOrDefaultAsync()
+                            ?? throw new NotFoundException(ExceptionEnum.NotFound.GetEnumDescription());
         
             return entity;
         }
-
 
         /// <summary>
         /// Updates an entity.
@@ -145,7 +146,8 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
         /// <returns>The updated entity.</returns>
         public async Task<T> UpdateAsync(T entity) 
         {
-            var existingEntity = await _context.Set<T>().FindAsync(entity.Id) ?? throw new NotFoundException(ExceptionEnum.NotFound.GetEnumDescription());
+            var existingEntity = await _context.Set<T>().FindAsync(entity.Id) 
+                            ?? throw new NotFoundException(ExceptionEnum.NotFound.GetEnumDescription());
             existingEntity.SetUpdatedValues(entity); 
             existingEntity.UpdatedAt = DateHelper.GetCurrentTimestamp();
         

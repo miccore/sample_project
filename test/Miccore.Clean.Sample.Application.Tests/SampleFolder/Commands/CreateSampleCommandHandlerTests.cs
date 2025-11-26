@@ -6,18 +6,21 @@ using Miccore.Clean.Sample.Core.Repositories;
 using Miccore.Clean.Sample.Core.Enums;
 using Miccore.Clean.Sample.Core.Extensions;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 
 namespace Miccore.Clean.Sample.Application.Tests.Sample.Commands;
 
 public class CreateSampleCommandHandlerTests
 {
     private readonly Mock<ISampleRepository> _sampleRepositoryMock;
+    private readonly Mock<ILogger<CreateSampleCommandHandler>> _loggerMock;
     private readonly CreateSampleCommandHandler _handler;
 
     public CreateSampleCommandHandlerTests()
     {
         _sampleRepositoryMock = new Mock<ISampleRepository>();
-        _handler = new CreateSampleCommandHandler(_sampleRepositoryMock.Object);
+        _loggerMock = new Mock<ILogger<CreateSampleCommandHandler>>();
+        _handler = new CreateSampleCommandHandler(_sampleRepositoryMock.Object, _loggerMock.Object);
     }
 
     [Fact]
@@ -41,14 +44,12 @@ public class CreateSampleCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ShouldThrowApplicationException_WhenMapperFails()
+    public async Task Handle_ShouldThrowArgumentNullException_WhenCommandIsNull()
     {
         // Arrange
         var command = null as CreateSampleCommand;
 
         // Act & Assert
-        var ex = await Assert.ThrowsAsync<ApplicationException>(() => _handler.Handle(command!, CancellationToken.None));
-
-        ex.Message.Should().Be(ExceptionEnum.MapperIssue.GetEnumDescription());
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _handler.Handle(command!, CancellationToken.None));
     }
 }

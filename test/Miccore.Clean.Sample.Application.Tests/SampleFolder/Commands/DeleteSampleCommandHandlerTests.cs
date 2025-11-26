@@ -5,18 +5,21 @@ using Miccore.Clean.Sample.Core.Exceptions;
 using Miccore.Clean.Sample.Core.Repositories;
 using Moq;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 
 namespace Miccore.Clean.Sample.Application.Tests.Sample.Commands;
 
 public class DeleteSampleCommandHandlerTests
 {
     private readonly Mock<ISampleRepository> _sampleRepositoryMock;
+    private readonly Mock<ILogger<DeleteSampleCommandHandler>> _loggerMock;
     private readonly DeleteSampleCommandHandler _handler;
 
     public DeleteSampleCommandHandlerTests()
     {
         _sampleRepositoryMock = new Mock<ISampleRepository>();
-        _handler = new DeleteSampleCommandHandler(_sampleRepositoryMock.Object);
+        _loggerMock = new Mock<ILogger<DeleteSampleCommandHandler>>();
+        _handler = new DeleteSampleCommandHandler(_sampleRepositoryMock.Object, _loggerMock.Object);
     }
 
     [Fact]

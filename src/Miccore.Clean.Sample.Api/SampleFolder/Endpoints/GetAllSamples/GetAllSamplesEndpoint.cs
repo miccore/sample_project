@@ -1,53 +1,40 @@
 using Miccore.Clean.Sample.Api.Sample.Mappers;
 using Miccore.Clean.Sample.Application.Sample.Queries.GetAllSamples;
+using Miccore.Clean.Sample.Api.Endpoints.Base;
 
 namespace Miccore.Clean.Sample.Api.Sample.Endpoints.GetAllSamples
 {
-    public class GetAllSamplesEndpoint (IMediator _mediator) : Endpoint<GetAllSamplesRequest, ApiResponse<PaginationModel<GetAllSamplesResponse>>>
+    /// <summary>
+    /// Endpoint for getting all samples with pagination support.
+    /// </summary>
+    public class GetAllSamplesEndpoint (IMediator _mediator) : BaseEndpoint<GetAllSamplesRequest, PaginationModel<GetAllSamplesResponse>>
     {
-        // add auto mapper
         private static AutoMapper.IMapper Mapper => SampleEndpointMapper.Mapper;
-        // add route
-        private readonly string _route = "sample";
 
         /// <summary>
         /// Configures the endpoint.
         /// </summary>
         public override void Configure()
         {
-            Get(_route);
+            Get(BuildRoute("samples"));
             AllowAnonymous();
         }
         
         /// <summary>
-        /// Handles the request asynchronously.
+        /// Executes the endpoint logic.
         /// </summary>
-        /// <param name="request">The request object.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        public override async Task HandleAsync(GetAllSamplesRequest request, CancellationToken cancellationToken)
+        protected override async Task ExecuteAsync(GetAllSamplesRequest request, CancellationToken cancellationToken)
         {
-            try
-            {   
-                // Send the request to the mediator and wait for the response
-                var response = await _mediator.Send(new GetAllSamplesQuery(request), cancellationToken);
+            var query = new GetAllSamplesQuery(request);
+            var response = await _mediator.Send(query, cancellationToken);
 
-                // return date if not paginate
-                if(!request.paginate)
-                    await SendAsync(ApiResponse<PaginationModel<GetAllSamplesResponse>>.Success(
-                        Mapper.Map<PaginationModel<GetAllSamplesResponse>>(response)
-                    ), cancellation: cancellationToken);
-
-                // add next and previous links
-                response.AddRouteLink("", request);
-
-                await SendAsync(ApiResponse<PaginationModel<GetAllSamplesResponse>>.Success(
-                     Mapper.Map<PaginationModel<GetAllSamplesResponse>>(response)
-                ), cancellation: cancellationToken);
-            }
-            catch (Exception ex)
+            // Add pagination links if paginated
+            if (request.paginate)
             {
-                await SendAsync(ApiResponse<PaginationModel<GetAllSamplesResponse>>.Error(HttpStatusCode.InternalServerError, ex.Message), (int) HttpStatusCode.InternalServerError, cancellationToken);
+                response.AddRouteLink(BuildRoute("samples"), request);
             }
+
+            await SendSuccessAsync(Mapper.Map<PaginationModel<GetAllSamplesResponse>>(response), cancellationToken);
         }
     }
 }

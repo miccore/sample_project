@@ -1,3 +1,5 @@
+using Miccore.Clean.Sample.Infrastructure.Caching;
+
 namespace Miccore.Clean.Sample.Infrastructure
 {
     public static class DependencyInjection
@@ -13,6 +15,15 @@ namespace Miccore.Clean.Sample.Infrastructure
             
             // database connection
             services.AddDbContext<SampleApplicationDbContext>();
+
+            // Add cache configuration
+            services.Configure<CacheConfiguration>(configuration.GetSection(CacheConfiguration.SectionName));
+
+            // Add memory cache
+            services.AddMemoryCache();
+            
+            // Add cache service
+            services.AddSingleton<ICacheService, MemoryCacheService>();
 
             // add repositories
             #region repositories

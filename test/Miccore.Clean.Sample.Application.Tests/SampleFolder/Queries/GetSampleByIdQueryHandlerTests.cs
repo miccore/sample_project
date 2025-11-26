@@ -5,18 +5,21 @@ using Miccore.Clean.Sample.Core.Exceptions;
 using Miccore.Clean.Sample.Core.Repositories;
 using Moq;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 
 namespace Miccore.Clean.Sample.Application.Tests.Sample.Queries;
 
 public class GetSampleByIdQueryHandlerTests
 {
     private readonly Mock<ISampleRepository> _sampleRepositoryMock;
+    private readonly Mock<ILogger<GetSampleByIdQueryHandler>> _loggerMock;
     private readonly GetSampleByIdQueryHandler _handler;
 
     public GetSampleByIdQueryHandlerTests()
     {
         _sampleRepositoryMock = new Mock<ISampleRepository>();
-        _handler = new GetSampleByIdQueryHandler(_sampleRepositoryMock.Object);
+        _loggerMock = new Mock<ILogger<GetSampleByIdQueryHandler>>();
+        _handler = new GetSampleByIdQueryHandler(_sampleRepositoryMock.Object, _loggerMock.Object);
     }
 
     [Fact]

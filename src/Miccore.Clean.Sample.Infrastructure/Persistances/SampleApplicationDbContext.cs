@@ -1,3 +1,5 @@
+using Miccore.Clean.Sample.Core.Configurations;
+
 namespace Miccore.Clean.Sample.Infrastructure.Persistance
 {
     /// <summary>
@@ -6,7 +8,7 @@ namespace Miccore.Clean.Sample.Infrastructure.Persistance
     public class SampleApplicationDbContext(DbContextOptions<SampleApplicationDbContext> options, IConfiguration configuration) : DbContext(options)
     {
         // Configuration object to access app settings
-        private readonly IConfiguration configuration = configuration;
+        private readonly IConfiguration _configuration = configuration;
 
         #region DbSet
             public virtual DbSet<SampleEntity> Samples { get; set; }
@@ -15,11 +17,42 @@ namespace Miccore.Clean.Sample.Infrastructure.Persistance
         // Method to configure the database connection
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // Get connection string from environment file
-            var connectionString = $"server={configuration["Server"]};port={configuration["Port"]};database={configuration["Database"]};user={configuration["User"]};password={configuration["Password"]}";
+            // Get database configuration from appsettings using strongly-typed pattern
+            var dbConfig = _configuration.GetSection(DatabaseConfiguration.SectionName).Get<DatabaseConfiguration>()
+                ?? throw new InvalidOperationException($"Configuration section '{DatabaseConfiguration.SectionName}' is missing or invalid.");
 
             // Configure DbContext to use MySQL with the connection string
-            optionsBuilder.UseMySQL(connectionString);
+            optionsBuilder.UseMySQL(dbConfig.GetConnectionString());
+        }
+
+        /// <summary>
+        /// Configures the model with global query filters for soft delete.
+        /// </summary>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Apply global soft delete filter to all entities inheriting from BaseEntity
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+                {
+                    var parameter = Expression.Parameter(entityType.ClrType, "e");
+                    var deletedAtProperty = Expression.Property(parameter, nameof(BaseEntity.DeletedAt));
+                    
+                    // Filter: DeletedAt == 0 || DeletedAt == null
+                    var zero = Expression.Constant((long?)0, typeof(long?));
+                    var nullValue = Expression.Constant(null, typeof(long?));
+                    
+                    var isZero = Expression.Equal(deletedAtProperty, zero);
+                    var isNull = Expression.Equal(deletedAtProperty, nullValue);
+                    var filter = Expression.OrElse(isZero, isNull);
+                    
+                    var lambda = Expression.Lambda(filter, parameter);
+                    
+                    modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
+                }
+            }
         }
     }
 }

@@ -7,20 +7,23 @@ using Miccore.Clean.Sample.Core.Entities;
 using Miccore.Clean.Sample.Core.Repositories;
 using Miccore.Pagination.Model;
 using Moq;
+using Microsoft.Extensions.Logging;
 
 namespace Miccore.Clean.Sample.Application.Tests.Sample.Queries;
 
 public class GetAllSamplesQueryHandlerTests
 {
     private readonly Mock<ISampleRepository> _sampleRepositoryMock;
+    private readonly Mock<ILogger<GetAllSamplesQueryHandler>> _loggerMock;
     private readonly GetAllSamplesQueryHandler _handler;
     private readonly IMapper _mapper;
 
     public GetAllSamplesQueryHandlerTests()
     {
         _sampleRepositoryMock = new Mock<ISampleRepository>();
+        _loggerMock = new Mock<ILogger<GetAllSamplesQueryHandler>>();
         _mapper = SampleMapper.Mapper;
-        _handler = new GetAllSamplesQueryHandler(_sampleRepositoryMock.Object);
+        _handler = new GetAllSamplesQueryHandler(_sampleRepositoryMock.Object, _loggerMock.Object);
     }
 
     [Fact]

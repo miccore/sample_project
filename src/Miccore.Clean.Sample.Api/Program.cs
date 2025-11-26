@@ -1,36 +1,52 @@
 using Miccore.Clean.Sample.Application;
 using Miccore.Clean.Sample.Infrastructure;
-using Scalar.AspNetCore;
+using Miccore.Clean.Sample.Api.Configuration;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+// Configure Serilog early for bootstrap logging
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-builder.Services.AddFastEndpoints().SwaggerDocument();
-builder.Services.AddApplication(builder.Configuration);
-builder.Services.AddInfrastructure(builder.Configuration);
-
-#region builder configuration
-#endregion
-
-
-// Add Middlewares
-var app = builder.Build();
-
-app.MapOpenApi();
-app.UseFastEndpoints(c => {
-    c.Endpoints.RoutePrefix = "api";
-}).UseSwaggerGen();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+try
 {
-    app.MapScalarApiReference();
+    Log.Information("Starting application...");
+    
+    var builder = WebApplication.CreateBuilder(args);
+
+    // Configure Serilog
+    builder.Host.ConfigureSerilog();
+
+    // Add services
+    builder.Services
+        .AddEndpointServices()
+        .AddApplication(builder.Configuration)
+        .AddInfrastructure(builder.Configuration)
+        .AddHealthCheckServices();
+
+    var app = builder.Build();
+
+    // Configure middleware pipeline
+    app.UseSerilogRequestLoggingWithContext();
+    app.UseCustomMiddleware();
+    app.UseEndpointConfiguration();
+    
+    // Map endpoints
+    app.MapHealthCheckEndpoints();
+    app.MapApiDocumentation(app.Environment);
+    app.MapOpenApi();
+    
+    app.UseHttpsRedirection();
+
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
 
 public partial class Program { }

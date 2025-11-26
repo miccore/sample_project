@@ -1,20 +1,28 @@
-namespace Miccore.Clean.Sample.Application
+using Miccore.Clean.Sample.Application.Behaviors;
+using Miccore.Clean.Sample.Application.Features.Samples.Mappers;
+
+namespace Miccore.Clean.Sample.Application;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
+    /// <summary>
+    /// Add application services including MediatR, AutoMapper, and pipeline behaviors.
+    /// </summary>
+    public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
-        /// <summary>
-        /// add mediatr commands and query assembly
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
+        // Register AutoMapper with all profiles from this assembly
+        services.AddAutoMapper(typeof(SampleMappingProfile).Assembly);
+        
+        // Register MediatR with pipeline behaviors
+        services.AddMediatR(cfg => 
         {
-            #region addMediatR
-                services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-            #endregion
+            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             
-            return services;
-        }
+            // Register pipeline behaviors in order of execution
+            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        });
+        
+        return services;
     }
 }

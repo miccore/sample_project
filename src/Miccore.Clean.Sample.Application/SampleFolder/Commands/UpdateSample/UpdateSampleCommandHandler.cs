@@ -1,35 +1,39 @@
 using Miccore.Clean.Sample.Application.Sample.Responses;
 using Miccore.Clean.Sample.Application.Sample.Mappers;
+using Miccore.Clean.Sample.Application.Handlers;
+using Microsoft.Extensions.Logging;
 
 namespace Miccore.Clean.Sample.Application.Sample.Commands.UpdateSample
 {
     /// <summary>
     /// Update Sample Command Handler 
     /// </summary>
-    public sealed class UpdateSampleCommandHandler(ISampleRepository sampleRepository) : IRequestHandler<UpdateSampleCommand, SampleResponse>
+    public sealed class UpdateSampleCommandHandler : BaseCommandHandler<UpdateSampleCommand, SampleResponse>
     {
-        private readonly ISampleRepository _sampleRepository = sampleRepository;
+        private readonly ISampleRepository _sampleRepository;
         private readonly IMapper _mapper = SampleMapper.Mapper;
+
+        public UpdateSampleCommandHandler(
+            ISampleRepository sampleRepository,
+            ILogger<UpdateSampleCommandHandler> logger) : base(logger)
+        {
+            _sampleRepository = sampleRepository;
+        }
 
         /// <summary>
         /// Sample command Handle for updating element
         /// </summary>
-        /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public async Task<SampleResponse> Handle(UpdateSampleCommand request, CancellationToken cancellationToken)
+        protected override async Task<SampleResponse> HandleCommand(UpdateSampleCommand request, CancellationToken cancellationToken)
         {
             // map request with the entity
-            var sampleEntity = _mapper.Map<Core.Entities.SampleEntity>(request) ?? throw new ApplicationException(ExceptionEnum.MapperIssue.GetEnumDescription());
+            var sampleEntity = _mapper.Map<SampleEntity>(request) 
+                ?? throw new ApplicationException(ExceptionEnum.MapperIssue.GetEnumDescription());
 
-            // add async with the repository
+            // update with the repository
             var updatedSample = await _sampleRepository.UpdateAsync(sampleEntity);
 
             // map with the response
-            var sampleResponse = _mapper.Map<SampleResponse>(updatedSample);
-
-            // return response
-            return sampleResponse;
+            return _mapper.Map<SampleResponse>(updatedSample);
         }
     }
 }

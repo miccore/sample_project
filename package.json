@@ -1,17 +1,120 @@
 {
-	"company": "Miccore",
-	"name": "Clean",
-	"version": "1.0.0",
-    "type": "Single",
-	"projects": [
-		{ 
-			"name": "Sample",
-			"port": "8000",
-			"dockerUrl": "",
-			"kunernetesUrl": "cleanarchitecture-sample",
-			"context": "SampleApplicationDbContext",
-			"references": [],
-			"services": ["Sample"]
-		}
-	]
+  "$schema": "./package.schema.json",
+  "company": "Miccore",
+  "name": "Clean",
+  "version": "1.0.0",
+  "description": "Clean Architecture microservice template",
+  "type": "Microservice",
+  "framework": "net9.0",
+  "environments": {
+    "development": {
+      "baseUrl": "http://localhost",
+      "database": {
+        "server": "localhost",
+        "port": 3306
+      }
+    },
+    "staging": {
+      "baseUrl": "https://staging.miccore.com",
+      "database": {
+        "server": "${DB_SERVER}",
+        "port": 3306
+      }
+    },
+    "production": {
+      "baseUrl": "https://api.miccore.com",
+      "database": {
+        "server": "${DB_SERVER}",
+        "port": 3306
+      }
+    }
+  },
+  "projects": [
+    {
+      "name": "Sample",
+      "description": "Sample microservice demonstrating Clean Architecture patterns",
+      "port": 8000,
+      "healthCheck": "/health",
+      "swagger": "/swagger",
+      "docker": {
+        "image": "miccore/clean-sample",
+        "registry": "ghcr.io",
+        "dockerfile": "Dockerfile"
+      },
+      "kubernetes": {
+        "serviceName": "cleanarchitecture-sample",
+        "namespace": "miccore",
+        "replicas": {
+          "min": 1,
+          "max": 3
+        },
+        "resources": {
+          "requests": { "cpu": "100m", "memory": "128Mi" },
+          "limits": { "cpu": "500m", "memory": "512Mi" }
+        }
+      },
+      "database": {
+        "context": "SampleApplicationDbContext",
+        "provider": "MySQL",
+        "name": "sample_db",
+        "migrationProject": "Miccore.Clean.Sample.Infrastructure"
+      },
+      "dependencies": [],
+      "api": {
+        "prefix": "/api/v1",
+        "versioning": true,
+        "authentication": "JWT"
+      },
+      "events": {
+        "publishes": [
+          "sample.created",
+          "sample.updated",
+          "sample.deleted"
+        ],
+        "subscribes": []
+      }
+    }
+  ],
+  "infrastructure": {
+    "messaging": {
+      "enabled": true,
+      "broker": "Kafka",
+      "connectionString": "${KAFKA_BOOTSTRAP_SERVERS}",
+      "config": {
+        "groupId": "miccore-clean-sample",
+        "autoOffsetReset": "earliest",
+        "enableAutoCommit": true
+      }
+    },
+    "caching": {
+      "enabled": true,
+      "provider": "InMemory"
+    },
+    "observability": {
+      "tracing": {
+        "enabled": true,
+        "provider": "OpenTelemetry"
+      },
+      "metrics": {
+        "enabled": true,
+        "provider": "Prometheus",
+        "endpoint": "/metrics"
+      },
+      "logging": {
+        "provider": "Serilog",
+        "sinks": ["Console", "File"]
+      }
+    }
+  },
+  "cli": {
+    "commands": {
+      "build": "dotnet build",
+      "test": "dotnet test",
+      "run": "dotnet run --project src/Miccore.Clean.Sample.Api",
+      "migrate": "dotnet ef database update --project src/Miccore.Clean.Sample.Infrastructure --startup-project src/Miccore.Clean.Sample.Api",
+      "docker:build": "docker build -t miccore/clean-sample .",
+      "docker:run": "docker run -p 8000:8080 miccore/clean-sample",
+      "coverage": "dotnet test --collect:\"XPlat Code Coverage\" && reportgenerator -reports:**/coverage.cobertura.xml -targetdir:./TestResults/CoverageReport -reporttypes:Html"
+    }
+  }
 }
