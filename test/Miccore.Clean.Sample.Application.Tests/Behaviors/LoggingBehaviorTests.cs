@@ -25,7 +25,7 @@ public class LoggingBehaviorTests
         var expectedResponse = new TestResponse { Result = "success" };
         var nextCalled = false;
 
-        RequestHandlerDelegate<TestResponse> next = () =>
+        RequestHandlerDelegate<TestResponse> next = (ct) =>
         {
             nextCalled = true;
             return Task.FromResult(expectedResponse);
@@ -46,7 +46,7 @@ public class LoggingBehaviorTests
         var request = new TestRequest { Value = "test" };
         var expectedResponse = new TestResponse { Result = "expected result" };
 
-        RequestHandlerDelegate<TestResponse> next = () => Task.FromResult(expectedResponse);
+        RequestHandlerDelegate<TestResponse> next = (ct) => Task.FromResult(expectedResponse);
 
         // Act
         var result = await _behavior.Handle(request, next, CancellationToken.None);
@@ -63,7 +63,7 @@ public class LoggingBehaviorTests
         var request = new TestRequest { Value = "test" };
         var expectedException = new InvalidOperationException("Test exception");
 
-        RequestHandlerDelegate<TestResponse> next = () => throw expectedException;
+        RequestHandlerDelegate<TestResponse> next = (ct) => throw expectedException;
 
         // Act
         var act = () => _behavior.Handle(request, next, CancellationToken.None);
@@ -80,7 +80,7 @@ public class LoggingBehaviorTests
         var request = new TestRequest { Value = "test" };
         var expectedResponse = new TestResponse { Result = "success" };
 
-        RequestHandlerDelegate<TestResponse> next = () => Task.FromResult(expectedResponse);
+        RequestHandlerDelegate<TestResponse> next = (ct) => Task.FromResult(expectedResponse);
 
         // Act
         await _behavior.Handle(request, next, CancellationToken.None);
@@ -103,7 +103,7 @@ public class LoggingBehaviorTests
         var request = new TestRequest { Value = "test" };
         var expectedException = new InvalidOperationException("Test exception");
 
-        RequestHandlerDelegate<TestResponse> next = () => throw expectedException;
+        RequestHandlerDelegate<TestResponse> next = (ct) => throw expectedException;
 
         // Act
         try
@@ -134,18 +134,14 @@ public class LoggingBehaviorTests
         var cts = new CancellationTokenSource();
         CancellationToken capturedToken = default;
 
-        RequestHandlerDelegate<TestResponse> next = () =>
+        RequestHandlerDelegate<TestResponse> next = (ct) =>
         {
-            capturedToken = cts.Token;
+            capturedToken = ct;
             return Task.FromResult(new TestResponse { Result = "success" });
         };
 
         // Act
-        await _behavior.Handle(request, () =>
-        {
-            capturedToken = cts.Token;
-            return Task.FromResult(new TestResponse { Result = "success" });
-        }, cts.Token);
+        await _behavior.Handle(request, next, cts.Token);
 
         // Assert - The token should be the same as what we passed
         capturedToken.Should().Be(cts.Token);
@@ -159,9 +155,9 @@ public class LoggingBehaviorTests
         var expectedResponse = new TestResponse { Result = "success" };
 
         // Simulate a slow request (> 500ms)
-        RequestHandlerDelegate<TestResponse> next = async () =>
+        RequestHandlerDelegate<TestResponse> next = async (ct) =>
         {
-            await Task.Delay(550);
+            await Task.Delay(550, ct);
             return expectedResponse;
         };
 

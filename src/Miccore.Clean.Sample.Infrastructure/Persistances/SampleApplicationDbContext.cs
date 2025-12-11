@@ -21,8 +21,10 @@ namespace Miccore.Clean.Sample.Infrastructure.Persistance
             var dbConfig = _configuration.GetSection(DatabaseConfiguration.SectionName).Get<DatabaseConfiguration>()
                 ?? throw new InvalidOperationException($"Configuration section '{DatabaseConfiguration.SectionName}' is missing or invalid.");
 
-            // Configure DbContext to use MySQL with the connection string
-            optionsBuilder.UseMySQL(dbConfig.GetConnectionString());
+            // Configure DbContext to use MySQL with Pomelo provider
+            // ServerVersion.AutoDetect will automatically detect the MySQL/MariaDB version
+            var connectionString = dbConfig.GetConnectionString();
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
 
         /// <summary>

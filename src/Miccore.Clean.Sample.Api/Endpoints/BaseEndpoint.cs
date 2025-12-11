@@ -1,8 +1,8 @@
 using System.Net;
 using FastEndpoints;
+using Microsoft.AspNetCore.Http;
 using Miccore.Clean.Sample.Core.ApiModels;
 using Miccore.Clean.Sample.Core.Exceptions;
-using Microsoft.Extensions.Logging;
 
 namespace Miccore.Clean.Sample.Api.Endpoints;
 
@@ -68,13 +68,12 @@ public abstract class BaseEndpoint<TRequest, TResponse> : Endpoint<TRequest, Api
     /// </summary>
     /// <param name="data">The response data.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    protected Task SendSuccessAsync(TResponse data, CancellationToken cancellationToken = default)
+    protected async Task SendSuccessAsync(TResponse data, CancellationToken cancellationToken = default)
     {
-        return SendAsync(
-            ApiResponse<TResponse>.Success(data),
-            (int)HttpStatusCode.OK,
-            cancellationToken
-        );
+        var response = ApiResponse<TResponse>.Success(data);
+        Response = response;
+        HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+        await HttpContext.Response.WriteAsJsonAsync(response, cancellationToken);
     }
 
     /// <summary>
@@ -82,22 +81,22 @@ public abstract class BaseEndpoint<TRequest, TResponse> : Endpoint<TRequest, Api
     /// </summary>
     /// <param name="data">The response data.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    protected Task SendCreatedAsync(TResponse data, CancellationToken cancellationToken = default)
+    protected async Task SendCreatedAsync(TResponse data, CancellationToken cancellationToken = default)
     {
-        return SendAsync(
-            ApiResponse<TResponse>.Success(data),
-            (int)HttpStatusCode.Created,
-            cancellationToken
-        );
+        var response = ApiResponse<TResponse>.Success(data);
+        Response = response;
+        HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
+        await HttpContext.Response.WriteAsJsonAsync(response, cancellationToken);
     }
 
     /// <summary>
     /// Sends a successful response with HTTP 204 No Content.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
-    protected new Task SendNoContentAsync(CancellationToken cancellationToken = default)
+    protected Task SendNoContentAsync(CancellationToken cancellationToken = default)
     {
-        return base.SendNoContentAsync(cancellationToken);
+        HttpContext.Response.StatusCode = (int)HttpStatusCode.NoContent;
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -105,13 +104,12 @@ public abstract class BaseEndpoint<TRequest, TResponse> : Endpoint<TRequest, Api
     /// </summary>
     /// <param name="data">The response data.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    protected Task SendPaginatedAsync(TResponse data, CancellationToken cancellationToken = default)
+    protected async Task SendPaginatedAsync(TResponse data, CancellationToken cancellationToken = default)
     {
-        return SendAsync(
-            ApiResponse<TResponse>.Success(data),
-            (int)HttpStatusCode.OK,
-            cancellationToken
-        );
+        var response = ApiResponse<TResponse>.Success(data);
+        Response = response;
+        HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+        await HttpContext.Response.WriteAsJsonAsync(response, cancellationToken);
     }
 }
 
@@ -158,6 +156,16 @@ public abstract class BaseEndpoint<TRequest> : Endpoint<TRequest>
     /// Override this method to implement the endpoint logic.
     /// </summary>
     protected new abstract Task ExecuteAsync(TRequest request, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Sends a successful response with HTTP 204 No Content.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    protected Task SendNoContentAsync(CancellationToken cancellationToken = default)
+    {
+        HttpContext.Response.StatusCode = (int)HttpStatusCode.NoContent;
+        return Task.CompletedTask;
+    }
 }
 
 /// <summary>
@@ -184,12 +192,11 @@ public abstract class BaseEndpointWithoutRequest<TResponse> : EndpointWithoutReq
     /// <summary>
     /// Sends a successful response with HTTP 200 OK.
     /// </summary>
-    protected Task SendSuccessAsync(TResponse data, CancellationToken cancellationToken = default)
+    protected async Task SendSuccessAsync(TResponse data, CancellationToken cancellationToken = default)
     {
-        return SendAsync(
-            ApiResponse<TResponse>.Success(data),
-            (int)HttpStatusCode.OK,
-            cancellationToken
-        );
+        var response = ApiResponse<TResponse>.Success(data);
+        Response = response;
+        HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+        await HttpContext.Response.WriteAsJsonAsync(response, cancellationToken);
     }
 }

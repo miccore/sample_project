@@ -36,7 +36,7 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
 
         try
         {
-            var response = await next();
+            var response = await next(cancellationToken);
 
             stopwatch.Stop();
 

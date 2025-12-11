@@ -1,13 +1,13 @@
-using Miccore.Clean.Sample.Application.Sample.Commands.CreateSample;
-using Miccore.Clean.Sample.Api.Sample.Mappers;
-using Miccore.Clean.Sample.Api.Endpoints.Base;
+using Miccore.Clean.Sample.Application.Features.Samples.Commands.CreateSample;
+using Miccore.Clean.Sample.Api.Features.Samples.Common;
+using Miccore.Clean.Sample.Api.Endpoints;
 
-namespace Miccore.Clean.Sample.Api.Sample.Endpoints.CreateSample
+namespace Miccore.Clean.Sample.Api.SampleFolder.Endpoints.CreateSample
 {
     /// <summary>
     /// Endpoint for creating a sample.
     /// </summary>
-    public class CreateSampleEndpoint (IMediator _mediator) : BaseEndpoint<CreateSampleRequest, CreateSampleResponse>
+    public class CreateSampleEndpoint (IMediator _mediator) : BaseEndpoint<CreateSampleRequest, SampleModel>
     {
         private static AutoMapper.IMapper Mapper => SampleEndpointMapper.Mapper;
 
@@ -28,7 +28,7 @@ namespace Miccore.Clean.Sample.Api.Sample.Endpoints.CreateSample
             var command = Mapper.Map<CreateSampleCommand>(request);
             var response = await _mediator.Send(command, cancellationToken);
             
-            await SendCreatedAsync(Mapper.Map<CreateSampleResponse>(response), cancellationToken);
+            await SendCreatedAsync(Mapper.Map<SampleModel>(response), cancellationToken);
         }
     }
 }

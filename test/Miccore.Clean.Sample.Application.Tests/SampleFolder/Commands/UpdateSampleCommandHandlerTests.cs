@@ -1,25 +1,33 @@
-using Miccore.Clean.Sample.Application.Sample.Commands.UpdateSample;
-using Miccore.Clean.Sample.Application.Sample.Responses;
+using Miccore.Clean.Sample.Application.SampleFolder.Commands.UpdateSample;
+using Miccore.Clean.Sample.Application.Features.Samples.Commands.UpdateSample;
+using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Core.Entities;
 using Miccore.Clean.Sample.Core.Exceptions;
 using Miccore.Clean.Sample.Core.Repositories;
 using Moq;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
+using AutoMapper;
+using Miccore.Clean.Sample.Application.Features.Samples.Mappers;
 
-namespace Miccore.Clean.Sample.Application.Tests.Sample.Commands;
+namespace Miccore.Clean.Sample.Application.Tests.SampleFolder.Commands;
 
 public class UpdateSampleCommandHandlerTests
 {
     private readonly Mock<ISampleRepository> _sampleRepositoryMock;
     private readonly Mock<ILogger<UpdateSampleCommandHandler>> _loggerMock;
+    private readonly IMapper _mapper;
     private readonly UpdateSampleCommandHandler _handler;
 
     public UpdateSampleCommandHandlerTests()
     {
         _sampleRepositoryMock = new Mock<ISampleRepository>();
         _loggerMock = new Mock<ILogger<UpdateSampleCommandHandler>>();
-        _handler = new UpdateSampleCommandHandler(_sampleRepositoryMock.Object, _loggerMock.Object);
+        
+        var config = new MapperConfiguration(cfg => cfg.AddProfile<SampleMappingProfile>());
+        _mapper = config.CreateMapper();
+        
+        _handler = new UpdateSampleCommandHandler(_sampleRepositoryMock.Object, _mapper, _loggerMock.Object);
     }
 
     [Fact]

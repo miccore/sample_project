@@ -1,0 +1,17 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <!-- Suppress warnings for transitive dependencies from Miccore.Net.Pagination -->
+    <!-- NU1902: Medium severity vulnerability -->
+    <!-- NU1903: High severity vulnerability -->
+    <!-- NU1904: Critical severity vulnerability -->
+    <!-- NU1608: Package version outside dependency constraint (Pomelo vs EF Core 10) -->
+    <!-- MSB3277: Assembly version conflicts (Miccore.Net.Pagination targets .NET 9) -->
+    <NoWarn>$(NoWarn);NU1902;NU1903;NU1904;NU1608;MSB3277</NoWarn>
+  </PropertyGroup>
+</Project>

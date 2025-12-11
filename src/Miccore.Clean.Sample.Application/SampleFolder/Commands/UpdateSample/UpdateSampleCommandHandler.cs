@@ -1,9 +1,9 @@
-using Miccore.Clean.Sample.Application.Sample.Responses;
-using Miccore.Clean.Sample.Application.Sample.Mappers;
+using Miccore.Clean.Sample.Application.Features.Samples.Commands.UpdateSample;
+using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Application.Handlers;
 using Microsoft.Extensions.Logging;
 
-namespace Miccore.Clean.Sample.Application.Sample.Commands.UpdateSample
+namespace Miccore.Clean.Sample.Application.SampleFolder.Commands.UpdateSample
 {
     /// <summary>
     /// Update Sample Command Handler 
@@ -11,13 +11,15 @@ namespace Miccore.Clean.Sample.Application.Sample.Commands.UpdateSample
     public sealed class UpdateSampleCommandHandler : BaseCommandHandler<UpdateSampleCommand, SampleResponse>
     {
         private readonly ISampleRepository _sampleRepository;
-        private readonly IMapper _mapper = SampleMapper.Mapper;
+        private readonly IMapper _mapper;
 
         public UpdateSampleCommandHandler(
             ISampleRepository sampleRepository,
-            ILogger<UpdateSampleCommandHandler> logger) : base(logger)
+            IMapper mapper,
+            ILogger<UpdateSampleCommandHandler> logger)
         {
             _sampleRepository = sampleRepository;
+            _mapper = mapper;
         }
 
         /// <summary>

@@ -1,8 +1,8 @@
-using Miccore.Clean.Sample.Api.Sample.Mappers;
-using Miccore.Clean.Sample.Application.Sample.Commands.DeleteSample;
-using Miccore.Clean.Sample.Api.Endpoints.Base;
+using Miccore.Clean.Sample.Api.Features.Samples.Common;
+using Miccore.Clean.Sample.Application.Features.Samples.Commands.DeleteSample;
+using Miccore.Clean.Sample.Api.Endpoints;
 
-namespace Miccore.Clean.Sample.Api.Sample.Endpoints.DeleteSample
+namespace Miccore.Clean.Sample.Api.SampleFolder.Endpoints.DeleteSample
 {
     /// <summary>
     /// Endpoint for deleting a sample.

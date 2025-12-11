@@ -1,20 +1,22 @@
-using Miccore.Clean.Sample.Application.Sample.Mappers;
-using Miccore.Clean.Sample.Application.Sample.Responses;
+using Miccore.Clean.Sample.Application.Features.Samples.Commands.CreateSample;
+using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Application.Handlers;
 using Microsoft.Extensions.Logging;
 
-namespace Miccore.Clean.Sample.Application.Sample.Commands.CreateSample
+namespace Miccore.Clean.Sample.Application.SampleFolder.Commands.CreateSample
 {
     public sealed class CreateSampleCommandHandler : BaseCommandHandler<CreateSampleCommand, SampleResponse>
     {
         private readonly ISampleRepository _sampleRepository;
-        private readonly IMapper _mapper = SampleMapper.Mapper;
+        private readonly IMapper _mapper;
 
         public CreateSampleCommandHandler(
             ISampleRepository sampleRepository,
-            ILogger<CreateSampleCommandHandler> logger) : base(logger)
+            IMapper mapper,
+            ILogger<CreateSampleCommandHandler> logger)
         {
             _sampleRepository = sampleRepository;
+            _mapper = mapper;
         }
 
         /// <summary>

@@ -1,13 +1,13 @@
-using Miccore.Clean.Sample.Application.Sample.Commands.UpdateSample;
-using Miccore.Clean.Sample.Api.Sample.Mappers;
-using Miccore.Clean.Sample.Api.Endpoints.Base;
+using Miccore.Clean.Sample.Application.Features.Samples.Commands.UpdateSample;
+using Miccore.Clean.Sample.Api.Features.Samples.Common;
+using Miccore.Clean.Sample.Api.Endpoints;
 
-namespace Miccore.Clean.Sample.Api.Sample.Endpoints.UpdateSample
+namespace Miccore.Clean.Sample.Api.SampleFolder.Endpoints.UpdateSample
 {
     /// <summary>
     /// Endpoint for updating a sample.
     /// </summary>
-    public sealed class UpdateSampleEndpoint (IMediator _mediator) : BaseEndpoint<UpdateSampleRequest, UpdateSampleResponse>
+    public sealed class UpdateSampleEndpoint (IMediator _mediator) : BaseEndpoint<UpdateSampleRequest, SampleModel>
     {
         private static AutoMapper.IMapper Mapper => SampleEndpointMapper.Mapper;
 
@@ -28,7 +28,7 @@ namespace Miccore.Clean.Sample.Api.Sample.Endpoints.UpdateSample
             var command = Mapper.Map<UpdateSampleCommand>(request);
             var response = await _mediator.Send(command, cancellationToken);
             
-            await SendSuccessAsync(Mapper.Map<UpdateSampleResponse>(response), cancellationToken);
+            await SendSuccessAsync(Mapper.Map<SampleModel>(response), cancellationToken);
         }
     }
 }
