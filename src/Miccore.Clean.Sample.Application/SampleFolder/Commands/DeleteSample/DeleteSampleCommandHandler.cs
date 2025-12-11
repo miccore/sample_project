@@ -1,20 +1,22 @@
-using Miccore.Clean.Sample.Application.Sample.Mappers;
-using Miccore.Clean.Sample.Application.Sample.Responses;
+using Miccore.Clean.Sample.Application.Features.Samples.Commands.DeleteSample;
+using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Application.Handlers;
 using Microsoft.Extensions.Logging;
 
-namespace Miccore.Clean.Sample.Application.Sample.Commands.DeleteSample
+namespace Miccore.Clean.Sample.Application.SampleFolder.Commands.DeleteSample
 {
     public sealed class DeleteSampleCommandHandler : BaseCommandHandler<DeleteSampleCommand, SampleResponse>
     {
         private readonly ISampleRepository _sampleRepository;
-        private readonly IMapper _mapper = SampleMapper.Mapper;
+        private readonly IMapper _mapper;
 
         public DeleteSampleCommandHandler(
             ISampleRepository sampleRepository,
-            ILogger<DeleteSampleCommandHandler> logger) : base(logger)
+            IMapper mapper,
+            ILogger<DeleteSampleCommandHandler> logger)
         {
             _sampleRepository = sampleRepository;
+            _mapper = mapper;
         }
 
         /// <summary>

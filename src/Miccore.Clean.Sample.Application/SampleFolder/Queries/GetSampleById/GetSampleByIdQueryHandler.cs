@@ -1,26 +1,28 @@
-using Miccore.Clean.Sample.Application.Sample.Responses;
-using Miccore.Clean.Sample.Application.Sample.Mappers;
+using Miccore.Clean.Sample.Application.Features.Samples.Queries.GetSample;
+using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Application.Handlers;
 using Microsoft.Extensions.Logging;
 
-namespace Miccore.Clean.Sample.Application.Sample.Queries.GetSampleById
+namespace Miccore.Clean.Sample.Application.SampleFolder.Queries.GetSampleById
 {
-    public sealed class GetSampleByIdQueryHandler : BaseQueryHandler<GetSampleByIdQuery, SampleResponse>
+    public sealed class GetSampleByIdQueryHandler : BaseQueryHandler<GetSampleQuery, SampleResponse>
     {
         private readonly ISampleRepository _sampleRepository;
-        private readonly IMapper _mapper = SampleMapper.Mapper;
+        private readonly IMapper _mapper;
 
         public GetSampleByIdQueryHandler(
             ISampleRepository sampleRepository,
-            ILogger<GetSampleByIdQueryHandler> logger) : base(logger)
+            IMapper mapper,
+            ILogger<GetSampleByIdQueryHandler> logger)
         {
             _sampleRepository = sampleRepository;
+            _mapper = mapper;
         }
 
         /// <summary>
         /// Getting sample by id query
         /// </summary>
-        protected override async Task<SampleResponse> HandleQuery(GetSampleByIdQuery request, CancellationToken cancellationToken)
+        protected override async Task<SampleResponse> HandleQuery(GetSampleQuery request, CancellationToken cancellationToken)
         {
             // get entity by id
             var entity = await _sampleRepository.GetByIdAsync(request.Id);

@@ -21,7 +21,7 @@ public class ValidationBehaviorTests
         var expectedResponse = new TestResponse { Id = 1 };
         var nextCalled = false;
 
-        RequestHandlerDelegate<TestResponse> next = () =>
+        RequestHandlerDelegate<TestResponse> next = (ct) =>
         {
             nextCalled = true;
             return Task.FromResult(expectedResponse);
@@ -51,7 +51,7 @@ public class ValidationBehaviorTests
         var expectedResponse = new TestResponse { Id = 1 };
         var nextCalled = false;
 
-        RequestHandlerDelegate<TestResponse> next = () =>
+        RequestHandlerDelegate<TestResponse> next = (ct) =>
         {
             nextCalled = true;
             return Task.FromResult(expectedResponse);
@@ -84,7 +84,7 @@ public class ValidationBehaviorTests
 
         var request = new TestRequest { Name = "" };
 
-        RequestHandlerDelegate<TestResponse> next = () => Task.FromResult(new TestResponse { Id = 1 });
+        RequestHandlerDelegate<TestResponse> next = (ct) => Task.FromResult(new TestResponse { Id = 1 });
 
         // Act
         var act = () => behavior.Handle(request, next, CancellationToken.None);
@@ -115,7 +115,7 @@ public class ValidationBehaviorTests
 
         var request = new TestRequest { Name = "" };
 
-        RequestHandlerDelegate<TestResponse> next = () => Task.FromResult(new TestResponse { Id = 1 });
+        RequestHandlerDelegate<TestResponse> next = (ct) => Task.FromResult(new TestResponse { Id = 1 });
 
         // Act
         var act = () => behavior.Handle(request, next, CancellationToken.None);
@@ -152,7 +152,7 @@ public class ValidationBehaviorTests
 
         var request = new TestRequest { Name = "" };
 
-        RequestHandlerDelegate<TestResponse> next = () => Task.FromResult(new TestResponse { Id = 1 });
+        RequestHandlerDelegate<TestResponse> next = (ct) => Task.FromResult(new TestResponse { Id = 1 });
 
         // Act
         var act = () => behavior.Handle(request, next, CancellationToken.None);
@@ -181,7 +181,7 @@ public class ValidationBehaviorTests
         var request = new TestRequest { Name = "" };
         var nextCalled = false;
 
-        RequestHandlerDelegate<TestResponse> next = () =>
+        RequestHandlerDelegate<TestResponse> next = (ct) =>
         {
             nextCalled = true;
             return Task.FromResult(new TestResponse { Id = 1 });
@@ -219,7 +219,7 @@ public class ValidationBehaviorTests
 
         var request = new TestRequest { Name = "test" };
 
-        RequestHandlerDelegate<TestResponse> next = () => Task.FromResult(new TestResponse { Id = 1 });
+        RequestHandlerDelegate<TestResponse> next = (ct) => Task.FromResult(new TestResponse { Id = 1 });
 
         // Act
         await behavior.Handle(request, next, cts.Token);
@@ -245,7 +245,7 @@ public class ValidationBehaviorTests
 
         var request = new TestRequest { Name = "" };
 
-        RequestHandlerDelegate<TestResponse> next = () => Task.FromResult(new TestResponse { Id = 1 });
+        RequestHandlerDelegate<TestResponse> next = (ct) => Task.FromResult(new TestResponse { Id = 1 });
 
         // Act
         var act = () => behavior.Handle(request, next, CancellationToken.None);

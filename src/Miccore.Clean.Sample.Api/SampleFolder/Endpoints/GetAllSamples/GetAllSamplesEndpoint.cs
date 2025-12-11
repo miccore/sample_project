@@ -1,13 +1,13 @@
-using Miccore.Clean.Sample.Api.Sample.Mappers;
-using Miccore.Clean.Sample.Application.Sample.Queries.GetAllSamples;
-using Miccore.Clean.Sample.Api.Endpoints.Base;
+using Miccore.Clean.Sample.Api.Features.Samples.Common;
+using Miccore.Clean.Sample.Application.Features.Samples.Queries.GetAllSamples;
+using Miccore.Clean.Sample.Api.Endpoints;
 
-namespace Miccore.Clean.Sample.Api.Sample.Endpoints.GetAllSamples
+namespace Miccore.Clean.Sample.Api.SampleFolder.Endpoints.GetAllSamples
 {
     /// <summary>
     /// Endpoint for getting all samples with pagination support.
     /// </summary>
-    public class GetAllSamplesEndpoint (IMediator _mediator) : BaseEndpoint<GetAllSamplesRequest, PaginationModel<GetAllSamplesResponse>>
+    public class GetAllSamplesEndpoint (IMediator _mediator) : BaseEndpoint<GetAllSamplesRequest, PaginationModel<SampleModel>>
     {
         private static AutoMapper.IMapper Mapper => SampleEndpointMapper.Mapper;
 
@@ -34,7 +34,7 @@ namespace Miccore.Clean.Sample.Api.Sample.Endpoints.GetAllSamples
                 response.AddRouteLink(BuildRoute("samples"), request);
             }
 
-            await SendSuccessAsync(Mapper.Map<PaginationModel<GetAllSamplesResponse>>(response), cancellationToken);
+            await SendSuccessAsync(Mapper.Map<PaginationModel<SampleModel>>(response), cancellationToken);
         }
     }
 }

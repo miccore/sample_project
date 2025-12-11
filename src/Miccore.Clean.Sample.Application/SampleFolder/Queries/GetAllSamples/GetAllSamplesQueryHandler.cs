@@ -1,20 +1,22 @@
-using Miccore.Clean.Sample.Application.Sample.Mappers;
-using Miccore.Clean.Sample.Application.Sample.Responses;
+using Miccore.Clean.Sample.Application.Features.Samples.Queries.GetAllSamples;
+using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Application.Handlers;
 using Microsoft.Extensions.Logging;
 
-namespace Miccore.Clean.Sample.Application.Sample.Queries.GetAllSamples
+namespace Miccore.Clean.Sample.Application.SampleFolder.Queries.GetAllSamples
 {
     public sealed class GetAllSamplesQueryHandler : BaseQueryHandler<GetAllSamplesQuery, PaginationModel<SampleResponse>>
     {
         private readonly ISampleRepository _sampleRepository;
-        private readonly IMapper _mapper = SampleMapper.Mapper;
+        private readonly IMapper _mapper;
 
         public GetAllSamplesQueryHandler(
             ISampleRepository sampleRepository,
-            ILogger<GetAllSamplesQueryHandler> logger) : base(logger)
+            IMapper mapper,
+            ILogger<GetAllSamplesQueryHandler> logger)
         {
             _sampleRepository = sampleRepository;
+            _mapper = mapper;
         }
 
         /// <summary>

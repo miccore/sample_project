@@ -1,15 +1,16 @@
 using AutoMapper;
 using FluentAssertions;
-using Miccore.Clean.Sample.Application.Sample.Mappers;
-using Miccore.Clean.Sample.Application.Sample.Queries.GetAllSamples;
-using Miccore.Clean.Sample.Application.Sample.Responses;
+using Miccore.Clean.Sample.Application.SampleFolder.Queries.GetAllSamples;
+using Miccore.Clean.Sample.Application.Features.Samples.Mappers;
+using Miccore.Clean.Sample.Application.Features.Samples.Queries.GetAllSamples;
+using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Core.Entities;
 using Miccore.Clean.Sample.Core.Repositories;
 using Miccore.Pagination.Model;
 using Moq;
 using Microsoft.Extensions.Logging;
 
-namespace Miccore.Clean.Sample.Application.Tests.Sample.Queries;
+namespace Miccore.Clean.Sample.Application.Tests.SampleFolder.Queries;
 
 public class GetAllSamplesQueryHandlerTests
 {
@@ -22,8 +23,11 @@ public class GetAllSamplesQueryHandlerTests
     {
         _sampleRepositoryMock = new Mock<ISampleRepository>();
         _loggerMock = new Mock<ILogger<GetAllSamplesQueryHandler>>();
-        _mapper = SampleMapper.Mapper;
-        _handler = new GetAllSamplesQueryHandler(_sampleRepositoryMock.Object, _loggerMock.Object);
+        
+        var config = new MapperConfiguration(cfg => cfg.AddProfile<SampleMappingProfile>());
+        _mapper = config.CreateMapper();
+        
+        _handler = new GetAllSamplesQueryHandler(_sampleRepositoryMock.Object, _mapper, _loggerMock.Object);
     }
 
     [Fact]
