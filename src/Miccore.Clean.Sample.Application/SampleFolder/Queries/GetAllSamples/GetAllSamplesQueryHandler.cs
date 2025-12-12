@@ -26,7 +26,7 @@ namespace Miccore.Clean.Sample.Application.SampleFolder.Queries.GetAllSamples
         {
             // get items
             var entities = await _sampleRepository.GetAllAsync(request.Query);
-            
+
             // mapping with response
             return _mapper.Map<PaginationModel<SampleResponse>>(entities);
         }

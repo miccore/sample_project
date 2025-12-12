@@ -15,11 +15,11 @@ public class SampleMappingProfile : Profile
     {
         // Entity <-> Response
         CreateMap<SampleEntity, SampleResponse>().ReverseMap();
-        
+
         // Entity <-> Commands
         CreateMap<SampleEntity, CreateSampleCommand>().ReverseMap();
         CreateMap<SampleEntity, UpdateSampleCommand>().ReverseMap();
-        
+
         // Pagination mappings
         CreateMap<PaginationModel<SampleEntity>, PaginationModel<SampleResponse>>().ReverseMap();
     }

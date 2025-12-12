@@ -46,7 +46,7 @@ public abstract class BaseEndpoint<TRequest, TResponse> : Endpoint<TRequest, Api
             var failures = ValidationFailures
                 .Select(x => $"{x.PropertyName}: {x.ErrorMessage}")
                 .ToList();
-            
+
             throw new ValidatorException(string.Join("\n", failures));
         }
 
@@ -145,7 +145,7 @@ public abstract class BaseEndpoint<TRequest> : Endpoint<TRequest>
             var failures = ValidationFailures
                 .Select(x => $"{x.PropertyName}: {x.ErrorMessage}")
                 .ToList();
-            
+
             throw new ValidatorException(string.Join("\n", failures));
         }
 

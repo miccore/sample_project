@@ -14,6 +14,6 @@ namespace Miccore.Clean.Sample.Core.ApiModels
         /// Gets or sets the error message.
         /// </summary>
         public string? Message { get; set; }
-        
+
     }
 }

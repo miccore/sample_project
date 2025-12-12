@@ -19,7 +19,7 @@ public sealed class UpdateSampleEndpoint(IMediator _mediator) : BaseEndpoint<Upd
         Put(BuildRoute("samples/{id}"));
         AllowAnonymous();
     }
-    
+
     /// <summary>
     /// Executes the endpoint logic.
     /// </summary>
@@ -27,7 +27,7 @@ public sealed class UpdateSampleEndpoint(IMediator _mediator) : BaseEndpoint<Upd
     {
         var command = Mapper.Map<UpdateSampleCommand>(request);
         var response = await _mediator.Send(command, cancellationToken);
-        
+
         await SendSuccessAsync(Mapper.Map<SampleModel>(response), cancellationToken);
     }
 }

@@ -13,7 +13,7 @@ public class MemoryCacheService : ICacheService
     private readonly IMemoryCache _cache;
     private readonly ILogger<MemoryCacheService> _logger;
     private readonly CacheConfiguration _cacheConfig;
-    
+
     /// <summary>
     /// Thread-safe collection to track cache keys for pattern-based removal.
     /// Uses ConcurrentDictionary for lock-free operations (value is unused, using byte for minimal memory).
@@ -21,7 +21,7 @@ public class MemoryCacheService : ICacheService
     private static readonly ConcurrentDictionary<string, byte> CacheKeys = new();
 
     public MemoryCacheService(
-        IMemoryCache cache, 
+        IMemoryCache cache,
         ILogger<MemoryCacheService> logger,
         IOptions<CacheConfiguration> cacheConfig)
     {
@@ -43,7 +43,7 @@ public class MemoryCacheService : ICacheService
         try
         {
             var found = _cache.TryGetValue(key, out T? value);
-            
+
             if (found && value != null)
             {
                 _logger.LogDebug("Cache hit for key: {CacheKey}", MaskSensitiveData(key));
@@ -84,10 +84,10 @@ public class MemoryCacheService : ICacheService
 
             _cache.Set(key, value, cacheOptions);
             CacheKeys.TryAdd(key, 0);
-            
+
             _logger.LogDebug("Cache set for key: {CacheKey} with expiration: {Expiration}",
                 MaskSensitiveData(key), expiration ?? _cacheConfig.DefaultExpiration);
-            
+
             await Task.CompletedTask;
         }
         catch (Exception ex)
@@ -108,7 +108,7 @@ public class MemoryCacheService : ICacheService
         {
             _cache.Remove(key);
             CacheKeys.TryRemove(key, out _);
-            
+
             _logger.LogDebug("Cache removed for key: {CacheKey}", MaskSensitiveData(key));
             await Task.CompletedTask;
         }
@@ -141,7 +141,7 @@ public class MemoryCacheService : ICacheService
 
             _logger.LogDebug("Pattern-based cache removal completed for pattern: {Pattern} | Removed {Count} keys",
                 pattern, keysToRemove.Count);
-            
+
             await Task.CompletedTask;
         }
         catch (Exception ex)

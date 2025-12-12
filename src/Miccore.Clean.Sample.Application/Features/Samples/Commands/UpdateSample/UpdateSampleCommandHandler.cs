@@ -6,7 +6,7 @@ namespace Miccore.Clean.Sample.Application.Features.Samples.Commands.UpdateSampl
 /// <summary>
 /// Update Sample Command Handler 
 /// </summary>
-public sealed class UpdateSampleCommandHandler(IUnitOfWork unitOfWork, IMapper mapper) 
+public sealed class UpdateSampleCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
     : BaseCommandHandler<UpdateSampleCommand, SampleResponse>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
@@ -18,7 +18,7 @@ public sealed class UpdateSampleCommandHandler(IUnitOfWork unitOfWork, IMapper m
     protected override async Task<SampleResponse> HandleCommand(UpdateSampleCommand request, CancellationToken cancellationToken)
     {
         // map request with the entity
-        var sampleEntity = _mapper.Map<SampleEntity>(request) 
+        var sampleEntity = _mapper.Map<SampleEntity>(request)
             ?? throw new ApplicationException(ExceptionEnum.MapperIssue.GetEnumDescription());
 
         // update with the repository

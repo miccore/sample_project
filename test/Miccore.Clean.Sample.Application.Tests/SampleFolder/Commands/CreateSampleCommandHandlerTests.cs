@@ -1,15 +1,12 @@
-using Moq;
+using AutoMapper;
+using FluentAssertions;
 using Miccore.Clean.Sample.Application.Features.Samples.Commands.CreateSample;
+using Miccore.Clean.Sample.Application.Features.Samples.Mappers;
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Core.Entities;
 using Miccore.Clean.Sample.Core.Interfaces;
 using Miccore.Clean.Sample.Core.Repositories;
-using Miccore.Clean.Sample.Core.Enums;
-using Miccore.Clean.Sample.Core.Extensions;
-using FluentAssertions;
-using Microsoft.Extensions.Logging;
-using AutoMapper;
-using Miccore.Clean.Sample.Application.Features.Samples.Mappers;
+using Moq;
 
 namespace Miccore.Clean.Sample.Application.Tests.SampleFolder.Commands;
 
@@ -17,7 +14,6 @@ public class CreateSampleCommandHandlerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<ISampleRepository> _sampleRepositoryMock;
-    private readonly Mock<ILogger<CreateSampleCommandHandler>> _loggerMock;
     private readonly IMapper _mapper;
     private readonly CreateSampleCommandHandler _handler;
 
@@ -27,11 +23,10 @@ public class CreateSampleCommandHandlerTests
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _unitOfWorkMock.Setup(u => u.Samples).Returns(_sampleRepositoryMock.Object);
         _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
-        _loggerMock = new Mock<ILogger<CreateSampleCommandHandler>>();
-        
+
         var config = new MapperConfiguration(cfg => cfg.AddProfile<SampleMappingProfile>());
         _mapper = config.CreateMapper();
-        
+
         _handler = new CreateSampleCommandHandler(_unitOfWorkMock.Object, _mapper);
     }
 

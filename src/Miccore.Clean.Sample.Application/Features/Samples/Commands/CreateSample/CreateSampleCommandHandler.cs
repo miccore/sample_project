@@ -3,7 +3,7 @@ using Miccore.Clean.Sample.Application.Handlers;
 
 namespace Miccore.Clean.Sample.Application.Features.Samples.Commands.CreateSample;
 
-public sealed class CreateSampleCommandHandler(IUnitOfWork unitOfWork, IMapper mapper) 
+public sealed class CreateSampleCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
     : BaseCommandHandler<CreateSampleCommand, SampleResponse>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
@@ -15,7 +15,7 @@ public sealed class CreateSampleCommandHandler(IUnitOfWork unitOfWork, IMapper m
     protected override async Task<SampleResponse> HandleCommand(CreateSampleCommand request, CancellationToken cancellationToken)
     {
         // map request with the entity
-        var sampleEntity = _mapper.Map<SampleEntity>(request) 
+        var sampleEntity = _mapper.Map<SampleEntity>(request)
             ?? throw new ApplicationException(ExceptionEnum.MapperIssue.GetEnumDescription());
 
         // add async with the repository

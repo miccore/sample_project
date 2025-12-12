@@ -30,9 +30,9 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
         public async Task<T> DeleteAsync(Guid id)
         {
             var entity = await _context.Set<T>()
-                                        .FirstOrDefaultAsync(x => x.Id == id) 
+                                        .FirstOrDefaultAsync(x => x.Id == id)
                             ?? throw new NotFoundException(ExceptionEnum.NotFound.GetEnumDescription());
-        
+
             entity.DeletedAt = DateHelper.GetCurrentTimestamp();
 
             return entity;
@@ -66,7 +66,7 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
                                         .AsNoTracking()
                                         .ApplyIncludes(includes)
                                         .PaginateAsync(query);
-    
+
             return entities;
         }
 
@@ -80,7 +80,7 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
         {
             var entity = await _context.Set<T>()
                                         .ApplyIncludes(includes)
-                                        .FirstOrDefaultAsync(x => x.Id == id) 
+                                        .FirstOrDefaultAsync(x => x.Id == id)
                             ?? throw new NotFoundException(ExceptionEnum.NotFound.GetEnumDescription());
             return entity;
         }
@@ -132,7 +132,7 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
                                         .Where(WhereExpression)
                                         .FirstOrDefaultAsync()
                             ?? throw new NotFoundException(ExceptionEnum.NotFound.GetEnumDescription());
-        
+
             return entity;
         }
 
@@ -142,11 +142,11 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
         /// </summary>
         /// <param name="entity">The entity to update.</param>
         /// <returns>The updated entity.</returns>
-        public async Task<T> UpdateAsync(T entity) 
+        public async Task<T> UpdateAsync(T entity)
         {
-            var existingEntity = await _context.Set<T>().FindAsync(entity.Id) 
+            var existingEntity = await _context.Set<T>().FindAsync(entity.Id)
                             ?? throw new NotFoundException(ExceptionEnum.NotFound.GetEnumDescription());
-            existingEntity.SetUpdatedValues(entity); 
+            existingEntity.SetUpdatedValues(entity);
             existingEntity.UpdatedAt = DateHelper.GetCurrentTimestamp();
 
             return existingEntity;

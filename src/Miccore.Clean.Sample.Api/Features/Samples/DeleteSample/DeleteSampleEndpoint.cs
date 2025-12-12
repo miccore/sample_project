@@ -7,7 +7,7 @@ namespace Miccore.Clean.Sample.Api.Features.Samples.DeleteSample
     /// <summary>
     /// Endpoint for deleting a sample.
     /// </summary>
-    public sealed class DeleteSampleEndpoint (IMediator _mediator) : BaseEndpoint<DeleteSampleRequest>
+    public sealed class DeleteSampleEndpoint(IMediator _mediator) : BaseEndpoint<DeleteSampleRequest>
     {
         private static AutoMapper.IMapper Mapper => SampleEndpointMapper.Mapper;
 
@@ -19,7 +19,7 @@ namespace Miccore.Clean.Sample.Api.Features.Samples.DeleteSample
             Delete(BuildRoute("samples/{id}"));
             AllowAnonymous();
         }
-        
+
         /// <summary>
         /// Executes the endpoint logic.
         /// </summary>
@@ -27,7 +27,7 @@ namespace Miccore.Clean.Sample.Api.Features.Samples.DeleteSample
         {
             var command = Mapper.Map<DeleteSampleCommand>(request);
             await _mediator.Send(command, cancellationToken);
-            
+
             await SendNoContentAsync(cancellationToken);
         }
     }

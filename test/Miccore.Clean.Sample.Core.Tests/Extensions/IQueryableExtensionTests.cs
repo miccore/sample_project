@@ -23,7 +23,7 @@ namespace Miccore.Clean.Sample.Core.Tests.Extensions
             mockSet.As<IQueryable<SampleEntity>>().Setup(m => m.Expression).Returns(data.Expression);
             mockSet.As<IQueryable<SampleEntity>>().Setup(m => m.ElementType).Returns(data.ElementType);
             mockSet.As<IQueryable<SampleEntity>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
-        
+
             var includes = new[] { "RelatedEntity1", "RelatedEntity2" };
 
             // Act

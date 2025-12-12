@@ -33,11 +33,11 @@ public class SqliteTestRepository<T> : IBaseRepository<T> where T : BaseEntity
     public async Task<T> DeleteAsync(Guid id)
     {
         var entity = await _context.Set<T>()
-                                    .FirstOrDefaultAsync(x => x.Id == id && (x.DeletedAt == 0 || x.DeletedAt == null)) 
+                                    .FirstOrDefaultAsync(x => x.Id == id && (x.DeletedAt == 0 || x.DeletedAt == null))
                                     ?? throw new NotFoundException("NOT_FOUND");
-        
+
         entity.DeletedAt = DateHelper.GetCurrentTimestamp();
-        
+
         await _context.SaveChangesAsync();
 
         return entity;
@@ -61,7 +61,7 @@ public class SqliteTestRepository<T> : IBaseRepository<T> where T : BaseEntity
                                 .AsNoTracking()
                                 .ApplyIncludes(includes)
                                 .Where(x => x.DeletedAt == 0 || x.DeletedAt == null);
-        
+
         return await PaginateAsync(queryable, query);
     }
 
@@ -86,7 +86,7 @@ public class SqliteTestRepository<T> : IBaseRepository<T> where T : BaseEntity
                                 .ApplyIncludes(includes)
                                 .Where(whereExpression)
                                 .Where(x => x.DeletedAt == 0 || x.DeletedAt == null);
-        
+
         return await PaginateAsync(queryable, query);
     }
 
@@ -124,7 +124,7 @@ public class SqliteTestRepository<T> : IBaseRepository<T> where T : BaseEntity
 
         entity.UpdatedAt = DateHelper.GetCurrentTimestamp();
         _context.Entry(existingEntity).CurrentValues.SetValues(entity);
-        
+
         await _context.SaveChangesAsync();
 
         return entity;

@@ -20,10 +20,10 @@ namespace Miccore.Clean.Sample.Core.Extensions
                 var con = context.GetType().GetProperty(property.Name);
 
                 // Skip if the property value is null or con is null
-                if(prop is null || con is null) continue;
+                if (prop is null || con is null) continue;
 
                 // Update the context property if the values are different
-                if(prop != con.GetValue(context))
+                if (prop != con.GetValue(context))
                     con.SetValue(context, prop);
             }
 

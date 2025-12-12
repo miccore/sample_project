@@ -42,7 +42,7 @@ public class SqliteBaseRepositoryTests : IDisposable
         result.Should().NotBeNull();
         result.Id.Should().NotBe(Guid.Empty);
         result.Name.Should().Be("Test Entity");
-        
+
         // Verify in database
         var dbEntity = await _fixture.Context.Samples.FindAsync(result.Id);
         dbEntity.Should().NotBeNull();
@@ -124,7 +124,7 @@ public class SqliteBaseRepositoryTests : IDisposable
         await _repository.AddAsync(new SampleEntity { Name = "Entity 1" });
         await _repository.AddAsync(new SampleEntity { Name = "Entity 2" });
         await _repository.AddAsync(new SampleEntity { Name = "Entity 3" });
-        
+
         var query = new PaginationQuery { Page = 1, Limit = 10 };
 
         // Act
@@ -145,7 +145,7 @@ public class SqliteBaseRepositoryTests : IDisposable
         await _repository.AddAsync(entity1);
         await _repository.AddAsync(entity2);
         await _repository.DeleteAsync(entity2.Id);
-        
+
         var query = new PaginationQuery { Page = 1, Limit = 10 };
 
         // Act
@@ -164,7 +164,7 @@ public class SqliteBaseRepositoryTests : IDisposable
         {
             await _repository.AddAsync(new SampleEntity { Name = $"Entity {i}" });
         }
-        
+
         var query = new PaginationQuery { Page = 2, Limit = 5 };
 
         // Act
@@ -270,7 +270,7 @@ public class SqliteBaseRepositoryTests : IDisposable
         // Arrange
         var entity = new SampleEntity { Name = "Original" };
         await _repository.AddAsync(entity);
-        
+
         entity.Name = "Updated";
 
         // Act
@@ -373,7 +373,7 @@ public class SqliteBaseRepositoryTests : IDisposable
         {
             await _repository.AddAsync(new SampleEntity { Name = i % 2 == 0 ? "Even" : "Odd" });
         }
-        
+
         var query = new PaginationQuery { Page = 1, Limit = 3 };
 
         // Act

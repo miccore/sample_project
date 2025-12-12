@@ -94,7 +94,7 @@ public class ExceptionHandlingMiddlewareTests
 
         // Assert
         context.Response.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-        
+
         var responseBody = await GetResponseBody(context);
         responseBody.Should().Contain("Name is required");
     }

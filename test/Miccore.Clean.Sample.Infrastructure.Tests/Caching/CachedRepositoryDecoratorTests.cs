@@ -108,11 +108,11 @@ public class CachedRepositoryDecoratorTests
         // Arrange
         var id = Guid.NewGuid();
         var entity = new TestEntity { Id = id, Name = "Test" };
-        
+
         _cacheServiceMock
             .Setup(c => c.GetAsync<TestEntity>(It.IsAny<string>()))
             .ReturnsAsync((TestEntity?)null);
-        
+
         _innerRepositoryMock
             .Setup(r => r.GetByIdAsync(id, It.IsAny<string[]>()))
             .ReturnsAsync(entity);
@@ -136,7 +136,7 @@ public class CachedRepositoryDecoratorTests
         // Arrange
         var entity = new TestEntity { Id = Guid.NewGuid(), Name = "Test" };
         Expression<Func<TestEntity, bool>> expression = e => e.Name == "Test";
-        
+
         _innerRepositoryMock
             .Setup(r => r.GetByParametersAsync(It.IsAny<Expression<Func<TestEntity, bool>>>(), It.IsAny<string[]>()))
             .ReturnsAsync(entity);
@@ -147,7 +147,7 @@ public class CachedRepositoryDecoratorTests
         // Assert
         result.Should().Be(entity);
         _innerRepositoryMock.Verify(
-            r => r.GetByParametersAsync(It.IsAny<Expression<Func<TestEntity, bool>>>(), It.IsAny<string[]>()), 
+            r => r.GetByParametersAsync(It.IsAny<Expression<Func<TestEntity, bool>>>(), It.IsAny<string[]>()),
             Times.Once);
     }
 
@@ -167,7 +167,7 @@ public class CachedRepositoryDecoratorTests
             TotalPages = 1,
             TotalItems = 1
         };
-        
+
         _innerRepositoryMock
             .Setup(r => r.GetAllAsync(paginationQuery, It.IsAny<string[]>()))
             .ReturnsAsync(paginatedResult);
@@ -189,7 +189,7 @@ public class CachedRepositoryDecoratorTests
     {
         // Arrange
         var entity = new TestEntity { Id = Guid.NewGuid(), Name = "New Entity" };
-        
+
         _innerRepositoryMock
             .Setup(r => r.AddAsync(entity))
             .ReturnsAsync(entity);
@@ -212,7 +212,7 @@ public class CachedRepositoryDecoratorTests
     {
         // Arrange
         var entity = new TestEntity { Id = Guid.NewGuid(), Name = "Updated Entity" };
-        
+
         _innerRepositoryMock
             .Setup(r => r.UpdateAsync(entity))
             .ReturnsAsync(entity);
@@ -236,7 +236,7 @@ public class CachedRepositoryDecoratorTests
         // Arrange
         var id = Guid.NewGuid();
         var entity = new TestEntity { Id = id, Name = "Deleted Entity" };
-        
+
         _innerRepositoryMock
             .Setup(r => r.DeleteAsync(id))
             .ReturnsAsync(entity);
@@ -259,7 +259,7 @@ public class CachedRepositoryDecoratorTests
     {
         // Arrange
         Expression<Func<TestEntity, bool>> expression = e => e.Name == "Test";
-        
+
         _innerRepositoryMock
             .Setup(r => r.DeleteHardAsync(It.IsAny<Expression<Func<TestEntity, bool>>>()))
             .Returns(Task.CompletedTask);
@@ -269,7 +269,7 @@ public class CachedRepositoryDecoratorTests
 
         // Assert
         _innerRepositoryMock.Verify(
-            r => r.DeleteHardAsync(It.IsAny<Expression<Func<TestEntity, bool>>>()), 
+            r => r.DeleteHardAsync(It.IsAny<Expression<Func<TestEntity, bool>>>()),
             Times.Once);
         _cacheServiceMock.Verify(c => c.RemoveByPatternAsync(It.IsAny<string>()), Times.Once);
     }
@@ -284,7 +284,7 @@ public class CachedRepositoryDecoratorTests
         // Arrange
         Expression<Func<TestEntity, bool>> expression = e => e.Name == "Test";
         var entities = new List<TestEntity> { new TestEntity { Id = Guid.NewGuid(), Name = "Test" } };
-        
+
         _innerRepositoryMock
             .Setup(r => r.GetAllByParametersAsync(It.IsAny<Expression<Func<TestEntity, bool>>>(), It.IsAny<string[]>()))
             .ReturnsAsync(entities);
@@ -295,7 +295,7 @@ public class CachedRepositoryDecoratorTests
         // Assert
         result.Should().BeEquivalentTo(entities);
         _innerRepositoryMock.Verify(
-            r => r.GetAllByParametersAsync(It.IsAny<Expression<Func<TestEntity, bool>>>(), It.IsAny<string[]>()), 
+            r => r.GetAllByParametersAsync(It.IsAny<Expression<Func<TestEntity, bool>>>(), It.IsAny<string[]>()),
             Times.Once);
     }
 
@@ -316,7 +316,7 @@ public class CachedRepositoryDecoratorTests
             TotalPages = 1,
             TotalItems = 1
         };
-        
+
         _innerRepositoryMock
             .Setup(r => r.GetAllByParametersPaginatedAsync(paginationQuery, It.IsAny<Expression<Func<TestEntity, bool>>>(), It.IsAny<string[]>()))
             .ReturnsAsync(paginatedResult);
@@ -327,7 +327,7 @@ public class CachedRepositoryDecoratorTests
         // Assert
         result.Should().Be(paginatedResult);
         _innerRepositoryMock.Verify(
-            r => r.GetAllByParametersPaginatedAsync(paginationQuery, It.IsAny<Expression<Func<TestEntity, bool>>>(), It.IsAny<string[]>()), 
+            r => r.GetAllByParametersPaginatedAsync(paginationQuery, It.IsAny<Expression<Func<TestEntity, bool>>>(), It.IsAny<string[]>()),
             Times.Once);
     }
 

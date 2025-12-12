@@ -19,7 +19,7 @@ public class GetAllSamplesEndpoint(IMediator _mediator) : BaseEndpoint<GetAllSam
         Get(BuildRoute("samples"));
         AllowAnonymous();
     }
-    
+
     /// <summary>
     /// Executes the endpoint logic.
     /// </summary>
