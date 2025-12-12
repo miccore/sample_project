@@ -1,7 +1,7 @@
 using Miccore.Clean.Sample.Core.Entities;
 using Miccore.Clean.Sample.Core.Exceptions;
 using Miccore.Clean.Sample.Infrastructure.Tests.Fixtures;
-using Miccore.Pagination.Model;
+using Miccore.Pagination;
 using FluentAssertions;
 
 namespace Miccore.Clean.Sample.Infrastructure.Tests.Repositories.Base;
@@ -125,7 +125,7 @@ public class SqliteBaseRepositoryTests : IDisposable
         await _repository.AddAsync(new SampleEntity { Name = "Entity 2" });
         await _repository.AddAsync(new SampleEntity { Name = "Entity 3" });
         
-        var query = new PaginationQuery { page = 1, limit = 10 };
+        var query = new PaginationQuery { Page = 1, Limit = 10 };
 
         // Act
         var result = await _repository.GetAllAsync(query);
@@ -146,7 +146,7 @@ public class SqliteBaseRepositoryTests : IDisposable
         await _repository.AddAsync(entity2);
         await _repository.DeleteAsync(entity2.Id);
         
-        var query = new PaginationQuery { page = 1, limit = 10 };
+        var query = new PaginationQuery { Page = 1, Limit = 10 };
 
         // Act
         var result = await _repository.GetAllAsync(query);
@@ -165,7 +165,7 @@ public class SqliteBaseRepositoryTests : IDisposable
             await _repository.AddAsync(new SampleEntity { Name = $"Entity {i}" });
         }
         
-        var query = new PaginationQuery { page = 2, limit = 5 };
+        var query = new PaginationQuery { Page = 2, Limit = 5 };
 
         // Act
         var result = await _repository.GetAllAsync(query);
@@ -374,7 +374,7 @@ public class SqliteBaseRepositoryTests : IDisposable
             await _repository.AddAsync(new SampleEntity { Name = i % 2 == 0 ? "Even" : "Odd" });
         }
         
-        var query = new PaginationQuery { page = 1, limit = 3 };
+        var query = new PaginationQuery { Page = 1, Limit = 3 };
 
         // Act
         var result = await _repository.GetAllByParametersPaginatedAsync(query, x => x.Name == "Even");

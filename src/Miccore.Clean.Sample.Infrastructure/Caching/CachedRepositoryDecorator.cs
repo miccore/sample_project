@@ -1,6 +1,6 @@
 using Miccore.Clean.Sample.Core.Entities;
 using Miccore.Clean.Sample.Core.Repositories;
-using Miccore.Pagination.Model;
+using Miccore.Pagination;
 using Microsoft.Extensions.Options;
 using System.Linq.Expressions;
 

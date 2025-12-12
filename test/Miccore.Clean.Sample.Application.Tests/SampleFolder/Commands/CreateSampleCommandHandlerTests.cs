@@ -1,8 +1,8 @@
 using Moq;
-using Miccore.Clean.Sample.Application.SampleFolder.Commands.CreateSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Commands.CreateSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Core.Entities;
+using Miccore.Clean.Sample.Core.Interfaces;
 using Miccore.Clean.Sample.Core.Repositories;
 using Miccore.Clean.Sample.Core.Enums;
 using Miccore.Clean.Sample.Core.Extensions;
@@ -15,6 +15,7 @@ namespace Miccore.Clean.Sample.Application.Tests.SampleFolder.Commands;
 
 public class CreateSampleCommandHandlerTests
 {
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<ISampleRepository> _sampleRepositoryMock;
     private readonly Mock<ILogger<CreateSampleCommandHandler>> _loggerMock;
     private readonly IMapper _mapper;
@@ -23,12 +24,15 @@ public class CreateSampleCommandHandlerTests
     public CreateSampleCommandHandlerTests()
     {
         _sampleRepositoryMock = new Mock<ISampleRepository>();
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _unitOfWorkMock.Setup(u => u.Samples).Returns(_sampleRepositoryMock.Object);
+        _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
         _loggerMock = new Mock<ILogger<CreateSampleCommandHandler>>();
         
         var config = new MapperConfiguration(cfg => cfg.AddProfile<SampleMappingProfile>());
         _mapper = config.CreateMapper();
         
-        _handler = new CreateSampleCommandHandler(_sampleRepositoryMock.Object, _mapper, _loggerMock.Object);
+        _handler = new CreateSampleCommandHandler(_unitOfWorkMock.Object, _mapper);
     }
 
     [Fact]
@@ -49,6 +53,7 @@ public class CreateSampleCommandHandlerTests
         result.Should().NotBeNull();
         result.Id.Should().Be(sampleResponse.Id);
         result.Name.Should().Be(sampleResponse.Name);
+        _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

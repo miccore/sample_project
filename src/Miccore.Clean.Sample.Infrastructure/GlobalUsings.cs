@@ -15,7 +15,7 @@ global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Options;
 
 // External packages
-global using Miccore.Pagination.Model;
+global using Miccore.Pagination;
 
 // Project namespaces - Core
 global using Miccore.Clean.Sample.Core.Configurations;

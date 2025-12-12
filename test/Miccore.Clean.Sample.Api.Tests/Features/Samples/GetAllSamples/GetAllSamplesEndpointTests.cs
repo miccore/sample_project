@@ -5,7 +5,7 @@ using Miccore.Clean.Sample.Api.Features.Samples.GetAllSamples;
 using Miccore.Clean.Sample.Application.Features.Samples.Queries.GetAllSamples;
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Core.Exceptions;
-using Miccore.Pagination.Model;
+using Miccore.Pagination;
 using FastEndpoints;
 
 namespace Miccore.Clean.Sample.Api.Tests.Features.Samples.GetAllSamples;
@@ -25,7 +25,7 @@ public class GetAllSamplesEndpointTests
     public async Task HandleAsync_ShouldReturnSuccess_WhenRequestIsValid()
     {
         // Arrange
-        var request = new GetAllSamplesRequest { page = 1, limit = 10 };
+        var request = new GetAllSamplesRequest { Page = 1, Limit = 10 };
         var samples = new List<SampleResponse>
         {
             new() { Id = Guid.NewGuid(), Name = "Sample 1" },
@@ -55,7 +55,7 @@ public class GetAllSamplesEndpointTests
     public async Task HandleAsync_ShouldReturnEmptyList_WhenNoSamplesExist()
     {
         // Arrange
-        var request = new GetAllSamplesRequest { page = 1, limit = 10 };
+        var request = new GetAllSamplesRequest { Page = 1, Limit = 10 };
         var paginationResponse = new PaginationModel<SampleResponse>
         {
             Items = new List<SampleResponse>(),
@@ -79,7 +79,7 @@ public class GetAllSamplesEndpointTests
     public async Task HandleAsync_ShouldThrowException_WhenExceptionOccurs()
     {
         // Arrange
-        var request = new GetAllSamplesRequest { page = 1, limit = 10 };
+        var request = new GetAllSamplesRequest { Page = 1, Limit = 10 };
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<GetAllSamplesQuery>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception("Internal server error"));
@@ -94,7 +94,7 @@ public class GetAllSamplesEndpointTests
     public async Task HandleAsync_WithPagination_ShouldAddRouteLinks()
     {
         // Arrange
-        var request = new GetAllSamplesRequest { page = 1, limit = 10, paginate = true };
+        var request = new GetAllSamplesRequest { Page = 1, Limit = 10, Paginate = true };
         var samples = new List<SampleResponse>
         {
             new() { Id = Guid.NewGuid(), Name = "Sample 1" },

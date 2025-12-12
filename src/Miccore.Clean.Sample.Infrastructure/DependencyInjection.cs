@@ -1,37 +1,42 @@
 using Miccore.Clean.Sample.Infrastructure.Caching;
+using Miccore.Clean.Sample.Infrastructure.Persistance;
 
-namespace Miccore.Clean.Sample.Infrastructure
+namespace Miccore.Clean.Sample.Infrastructure;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
+    /// <summary>
+    /// Adds infrastructure services to the service collection.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <returns>The updated service collection.</returns>
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        /// <summary>
-        /// Adds infrastructure services to the service collection.
-        /// </summary>
-        /// <param name="services">The service collection.</param>
-        /// <param name="configuration">The configuration.</param>
-        /// <returns>The updated service collection.</returns>
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-        {
-            
-            // database connection
-            services.AddDbContext<SampleApplicationDbContext>();
+        
+        // database connection
+        services.AddDbContext<SampleApplicationDbContext>();
 
-            // Add cache configuration
-            services.Configure<CacheConfiguration>(configuration.GetSection(CacheConfiguration.SectionName));
+        // Add cache configuration
+        services.Configure<CacheConfiguration>(opt => configuration.GetSection(CacheConfiguration.SectionName).Bind(opt));
 
-            // Add memory cache
-            services.AddMemoryCache();
-            
-            // Add cache service
-            services.AddSingleton<ICacheService, MemoryCacheService>();
+        // Add memory cache
+        services.AddMemoryCache();
+        
+        // Add cache service
+        services.AddSingleton<ICacheService, MemoryCacheService>();
 
-            // add repositories
-            #region repositories
-                services.TryAddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-                services.TryAddScoped<ISampleRepository, SampleRepository>();
-            #endregion
+        // add repositories
+        #region repositories
+            services.TryAddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            services.TryAddScoped<ISampleRepository, SampleRepository>();
+        #endregion
 
-            return services;
-        }
+        // add unit of work
+        #region unit of work
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+        #endregion
+
+        return services;
     }
 }

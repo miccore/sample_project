@@ -4,7 +4,7 @@ using Miccore.Clean.Sample.Core.Exceptions;
 using Miccore.Clean.Sample.Core.Helpers;
 using Miccore.Clean.Sample.Core.Repositories.Base;
 using Miccore.Clean.Sample.Infrastructure.Tests.Fixtures;
-using Miccore.Pagination.Model;
+using Miccore.Pagination;
 using Microsoft.EntityFrameworkCore;
 
 namespace Miccore.Clean.Sample.Infrastructure.Tests.Repositories;
@@ -137,16 +137,16 @@ public class SqliteTestRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
         var totalItems = await queryable.CountAsync();
         var items = await queryable
-            .Skip((query.page - 1) * query.limit)
-            .Take(query.limit)
+            .Skip((query.Page - 1) * query.Limit)
+            .Take(query.Limit)
             .ToListAsync();
 
         return new PaginationModel<T>
         {
             Items = items,
             TotalItems = totalItems,
-            CurrentPage = query.page,
-            TotalPages = (int)Math.Ceiling(totalItems / (double)query.limit)
+            CurrentPage = query.Page,
+            TotalPages = (int)Math.Ceiling(totalItems / (double)query.Limit)
         };
     }
 }

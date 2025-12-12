@@ -3,10 +3,10 @@ using Miccore.Clean.Sample.Application.Handlers;
 
 namespace Miccore.Clean.Sample.Application.Features.Samples.Commands.DeleteSample;
 
-public sealed class DeleteSampleCommandHandler(ISampleRepository sampleRepository, IMapper mapper) 
+public sealed class DeleteSampleCommandHandler(IUnitOfWork unitOfWork, IMapper mapper) 
     : BaseCommandHandler<DeleteSampleCommand, SampleResponse>
 {
-    private readonly ISampleRepository _sampleRepository = sampleRepository;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IMapper _mapper = mapper;
 
     /// <summary>
@@ -15,7 +15,10 @@ public sealed class DeleteSampleCommandHandler(ISampleRepository sampleRepositor
     protected override async Task<SampleResponse> HandleCommand(DeleteSampleCommand request, CancellationToken cancellationToken)
     {
         // delete with the repository
-        var deletedSample = await _sampleRepository.DeleteAsync(request.Id);
+        var deletedSample = await _unitOfWork.Samples.DeleteAsync(request.Id);
+
+        // save changes via unit of work
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // map with the response
         return _mapper.Map<SampleResponse>(deletedSample);

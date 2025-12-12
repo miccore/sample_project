@@ -5,7 +5,7 @@ using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Application.Tests.Fixtures;
 using Miccore.Clean.Sample.Core.Entities;
 using Miccore.Clean.Sample.Core.Repositories;
-using Miccore.Pagination.Model;
+using Miccore.Pagination;
 using Moq;
 
 namespace Miccore.Clean.Sample.Application.Tests.Sample.Queries;
@@ -28,9 +28,9 @@ public class GetAllSamplesQueryHandlerTests
     {
         // Arrange
         var query = new GetAllSamplesQuery(new PaginationQuery());  
-        query.Query.paginate = false;
-        query.Query.page = 1;
-        query.Query.limit = 10;
+        query.Query.Paginate = false;
+        query.Query.Page = 1;
+        query.Query.Limit = 10;
         var sampleEntities = new PaginationModel<SampleEntity>{
             Items = new List<SampleEntity>
             {
@@ -60,9 +60,9 @@ public class GetAllSamplesQueryHandlerTests
     {
         // Arrange
         var query = new GetAllSamplesQuery(new PaginationQuery());  
-        query.Query.paginate = false;
-        query.Query.page = 1;
-        query.Query.limit = 10;
+        query.Query.Paginate = false;
+        query.Query.Page = 1;
+        query.Query.Limit = 10;
         var sampleEntities = new PaginationModel<SampleEntity>{
             Items = new List<SampleEntity>()
         };

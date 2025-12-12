@@ -22,4 +22,4 @@ global using Miccore.Clean.Sample.Core.Extensions;
 global using Miccore.Clean.Sample.Core.Repositories.Base;
 
 // External packages
-global using Miccore.Pagination.Model;
+global using Miccore.Pagination;

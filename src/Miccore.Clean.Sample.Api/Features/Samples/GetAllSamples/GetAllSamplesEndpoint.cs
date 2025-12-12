@@ -29,7 +29,7 @@ public class GetAllSamplesEndpoint(IMediator _mediator) : BaseEndpoint<GetAllSam
         var response = await _mediator.Send(query, cancellationToken);
 
         // Add pagination links if paginated
-        if (request.paginate)
+        if (request.Paginate)
         {
             response.AddRouteLink(BuildRoute("samples"), request);
         }

@@ -11,18 +11,19 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
 
         /// <summary>
         /// Adds an entity to the database.
+        /// Note: Changes are not persisted until SaveChangesAsync is called on IUnitOfWork.
         /// </summary>
         /// <param name="entity">The entity to add.</param>
-        /// <returns>The added entity.</returns>
+        /// <returns>The added entity (tracked by EF Core).</returns>
         public async Task<T> AddAsync(T entity)
         {
             await _context.Set<T>().AddAsync(entity);
-            await _context.SaveChangesAsync();
             return entity;
         }
 
         /// <summary>
         /// Soft deletes an entity by setting its DeletedAt property.
+        /// Note: Changes are not persisted until SaveChangesAsync is called on IUnitOfWork.
         /// </summary>
         /// <param name="id">The ID of the entity to delete.</param>
         /// <returns>The soft deleted entity.</returns>
@@ -33,8 +34,6 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
                             ?? throw new NotFoundException(ExceptionEnum.NotFound.GetEnumDescription());
         
             entity.DeletedAt = DateHelper.GetCurrentTimestamp();
-        
-            await _context.SaveChangesAsync();
 
             return entity;
         }
@@ -42,19 +41,17 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
         /// <summary>
         /// Hard deletes entities that match the given expression.
         /// Uses IgnoreQueryFilters to include soft-deleted entities.
+        /// Note: Changes are not persisted until SaveChangesAsync is called on IUnitOfWork.
         /// </summary>
         /// <param name="WhereExpression">The expression to filter entities.</param>
         public async Task DeleteHardAsync(Expression<Func<T, bool>> WhereExpression)
         {
-            var entity = await _context.Set<T>()
-                                    .AsNoTracking()
+            var entities = await _context.Set<T>()
                                     .IgnoreQueryFilters()
                                     .Where(WhereExpression)
                                     .ToListAsync();
 
-            _context.RemoveRange(entity);
-
-            await _context.SaveChangesAsync();
+            _context.RemoveRange(entities);
         }
 
         /// <summary>
@@ -141,6 +138,7 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
 
         /// <summary>
         /// Updates an entity.
+        /// Note: Changes are not persisted until SaveChangesAsync is called on IUnitOfWork.
         /// </summary>
         /// <param name="entity">The entity to update.</param>
         /// <returns>The updated entity.</returns>
@@ -150,8 +148,6 @@ namespace Miccore.Clean.Sample.Infrastructure.Repositories.Base
                             ?? throw new NotFoundException(ExceptionEnum.NotFound.GetEnumDescription());
             existingEntity.SetUpdatedValues(entity); 
             existingEntity.UpdatedAt = DateHelper.GetCurrentTimestamp();
-        
-            await _context.SaveChangesAsync();
 
             return existingEntity;
         }

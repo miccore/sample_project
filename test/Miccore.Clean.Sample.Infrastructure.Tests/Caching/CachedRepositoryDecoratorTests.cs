@@ -4,7 +4,7 @@ using Miccore.Clean.Sample.Core.Entities.Base;
 using Miccore.Clean.Sample.Core.Interfaces;
 using Miccore.Clean.Sample.Core.Repositories.Base;
 using Miccore.Clean.Sample.Infrastructure.Caching;
-using Miccore.Pagination.Model;
+using Miccore.Pagination;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -159,7 +159,7 @@ public class CachedRepositoryDecoratorTests
     public async Task GetAllAsync_ShouldCallInnerRepository()
     {
         // Arrange
-        var paginationQuery = new PaginationQuery { page = 1, limit = 10 };
+        var paginationQuery = new PaginationQuery { Page = 1, Limit = 10 };
         var paginatedResult = new PaginationModel<TestEntity>
         {
             Items = new List<TestEntity> { new TestEntity { Id = Guid.NewGuid(), Name = "Test" } },
@@ -307,7 +307,7 @@ public class CachedRepositoryDecoratorTests
     public async Task GetAllByParametersPaginatedAsync_ShouldCallInnerRepository()
     {
         // Arrange
-        var paginationQuery = new PaginationQuery { page = 1, limit = 10 };
+        var paginationQuery = new PaginationQuery { Page = 1, Limit = 10 };
         Expression<Func<TestEntity, bool>> expression = e => e.Name == "Test";
         var paginatedResult = new PaginationModel<TestEntity>
         {
