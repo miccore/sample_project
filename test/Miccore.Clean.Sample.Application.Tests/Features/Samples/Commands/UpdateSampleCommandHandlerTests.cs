@@ -4,6 +4,7 @@ using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Application.Tests.Fixtures;
 using Miccore.Clean.Sample.Core.Entities;
 using Miccore.Clean.Sample.Core.Exceptions;
+using Miccore.Clean.Sample.Core.Interfaces;
 using Miccore.Clean.Sample.Core.Repositories;
 using Moq;
 using FluentAssertions;
@@ -12,6 +13,7 @@ namespace Miccore.Clean.Sample.Application.Tests.Sample.Commands;
 
 public class UpdateSampleCommandHandlerTests
 {
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<ISampleRepository> _sampleRepositoryMock;
     private readonly IMapper _mapper;
     private readonly UpdateSampleCommandHandler _handler;
@@ -19,8 +21,11 @@ public class UpdateSampleCommandHandlerTests
     public UpdateSampleCommandHandlerTests()
     {
         _sampleRepositoryMock = new Mock<ISampleRepository>();
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _unitOfWorkMock.Setup(u => u.Samples).Returns(_sampleRepositoryMock.Object);
+        _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
         _mapper = TestMapperFactory.Create();
-        _handler = new UpdateSampleCommandHandler(_sampleRepositoryMock.Object, _mapper);
+        _handler = new UpdateSampleCommandHandler(_unitOfWorkMock.Object, _mapper);
     }
 
     [Fact]
@@ -41,6 +46,7 @@ public class UpdateSampleCommandHandlerTests
         result.Should().NotBeNull();
         result.Id.Should().Be(sampleResponse.Id);
         result.Name.Should().Be(sampleResponse.Name);
+        _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

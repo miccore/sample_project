@@ -1,4 +1,5 @@
 using Miccore.Clean.Sample.Infrastructure.Caching;
+using Miccore.Clean.Sample.Infrastructure.Persistance;
 
 namespace Miccore.Clean.Sample.Infrastructure;
 
@@ -29,6 +30,11 @@ public static class DependencyInjection
         #region repositories
             services.TryAddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.TryAddScoped<ISampleRepository, SampleRepository>();
+        #endregion
+
+        // add unit of work
+        #region unit of work
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         #endregion
 
         return services;

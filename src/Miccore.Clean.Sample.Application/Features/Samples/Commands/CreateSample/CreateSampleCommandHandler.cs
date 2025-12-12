@@ -3,10 +3,10 @@ using Miccore.Clean.Sample.Application.Handlers;
 
 namespace Miccore.Clean.Sample.Application.Features.Samples.Commands.CreateSample;
 
-public sealed class CreateSampleCommandHandler(ISampleRepository sampleRepository, IMapper mapper) 
+public sealed class CreateSampleCommandHandler(IUnitOfWork unitOfWork, IMapper mapper) 
     : BaseCommandHandler<CreateSampleCommand, SampleResponse>
 {
-    private readonly ISampleRepository _sampleRepository = sampleRepository;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IMapper _mapper = mapper;
 
     /// <summary>
@@ -19,7 +19,10 @@ public sealed class CreateSampleCommandHandler(ISampleRepository sampleRepositor
             ?? throw new ApplicationException(ExceptionEnum.MapperIssue.GetEnumDescription());
 
         // add async with the repository
-        var addedSample = await _sampleRepository.AddAsync(sampleEntity);
+        var addedSample = await _unitOfWork.Samples.AddAsync(sampleEntity);
+
+        // save changes via unit of work
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // map with the response
         return _mapper.Map<SampleResponse>(addedSample);
