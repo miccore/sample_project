@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentAssertions;
 using Miccore.Clean.Sample.Application.Features.Samples.Commands.UpdateSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Application.Tests.Fixtures;
@@ -7,7 +8,6 @@ using Miccore.Clean.Sample.Core.Exceptions;
 using Miccore.Clean.Sample.Core.Interfaces;
 using Miccore.Clean.Sample.Core.Repositories;
 using Moq;
-using FluentAssertions;
 
 namespace Miccore.Clean.Sample.Application.Tests.Sample.Commands;
 

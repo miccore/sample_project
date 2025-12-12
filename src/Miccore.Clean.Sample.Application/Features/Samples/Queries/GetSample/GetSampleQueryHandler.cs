@@ -3,7 +3,7 @@ using Miccore.Clean.Sample.Application.Handlers;
 
 namespace Miccore.Clean.Sample.Application.Features.Samples.Queries.GetSample;
 
-public sealed class GetSampleQueryHandler(ISampleRepository sampleRepository, IMapper mapper) 
+public sealed class GetSampleQueryHandler(ISampleRepository sampleRepository, IMapper mapper)
     : BaseQueryHandler<GetSampleQuery, SampleResponse>
 {
     private readonly ISampleRepository _sampleRepository = sampleRepository;
@@ -16,7 +16,7 @@ public sealed class GetSampleQueryHandler(ISampleRepository sampleRepository, IM
     {
         // get entity by id
         var entity = await _sampleRepository.GetByIdAsync(request.Id);
-  
+
         // mapping response
         return _mapper.Map<SampleResponse>(entity);
     }

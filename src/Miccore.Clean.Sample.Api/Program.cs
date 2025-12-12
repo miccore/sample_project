@@ -11,7 +11,7 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     Log.Information("Starting application...");
-    
+
     var builder = WebApplication.CreateBuilder(args);
 
     // Configure Serilog
@@ -30,12 +30,12 @@ try
     app.UseSerilogRequestLoggingWithContext();
     app.UseCustomMiddleware();
     app.UseEndpointConfiguration();
-    
+
     // Map endpoints
     app.MapHealthCheckEndpoints();
     app.MapApiDocumentation(app.Environment);
     app.MapOpenApi();
-    
+
     app.UseHttpsRedirection();
 
     app.Run();

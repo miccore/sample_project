@@ -23,23 +23,23 @@ public class SampleEndpointMapperProfile : Profile
         // === Response Mappings ===
         // Map between API model and Application response
         CreateMap<SampleModel, SampleResponse>().ReverseMap();
-        
+
         // Pagination mapping
         CreateMap<PaginationModel<SampleModel>, PaginationModel<SampleResponse>>().ReverseMap();
 
         // === Request to Command/Query Mappings ===
         // Create
         CreateMap<CreateSampleRequest, CreateSampleCommand>();
-        
+
         // Update
         CreateMap<UpdateSampleRequest, UpdateSampleCommand>();
-        
+
         // Delete
         CreateMap<DeleteSampleRequest, DeleteSampleCommand>();
-        
+
         // Get by Id
         CreateMap<GetSampleRequest, GetSampleQuery>();
-        
+
         // Get All (inherits from PaginationQuery, no mapping needed)
     }
 }

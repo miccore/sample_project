@@ -40,7 +40,7 @@ public class ExceptionHandlingMiddleware
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         var correlationId = context.Items["CorrelationId"]?.ToString() ?? "N/A";
-        
+
         var (statusCode, message) = exception switch
         {
             NotFoundException notFoundEx => (HttpStatusCode.NotFound, notFoundEx.Message),
@@ -61,7 +61,7 @@ public class ExceptionHandlingMiddleware
             Title = GetTitle(statusCode),
             Detail = message,
             Instance = context.Request.Path,
-            Extensions = 
+            Extensions =
             {
                 ["correlationId"] = correlationId,
                 ["traceId"] = context.TraceIdentifier
@@ -93,7 +93,7 @@ public class ExceptionHandlingMiddleware
         {
             return "An unexpected error occurred. Please try again later.";
         }
-        
+
         return exception.Message;
     }
 

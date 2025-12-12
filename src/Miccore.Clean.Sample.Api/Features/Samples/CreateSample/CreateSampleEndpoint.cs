@@ -19,7 +19,7 @@ public class CreateSampleEndpoint(IMediator _mediator) : BaseEndpoint<CreateSamp
         Post(BuildRoute("samples"));
         AllowAnonymous();
     }
-    
+
     /// <summary>
     /// Executes the endpoint logic.
     /// </summary>
@@ -27,7 +27,7 @@ public class CreateSampleEndpoint(IMediator _mediator) : BaseEndpoint<CreateSamp
     {
         var command = Mapper.Map<CreateSampleCommand>(request);
         var response = await _mediator.Send(command, cancellationToken);
-        
+
         await SendCreatedAsync(Mapper.Map<SampleModel>(response), cancellationToken);
     }
 }

@@ -26,7 +26,7 @@ namespace Miccore.Clean.Sample.Application.SampleFolder.Queries.GetSampleById
         {
             // get entity by id
             var entity = await _sampleRepository.GetByIdAsync(request.Id);
-      
+
             // mapping response
             return _mapper.Map<SampleResponse>(entity);
         }

@@ -105,12 +105,12 @@ public class CachedRepositoryDecorator<T> : IBaseRepository<T> where T : BaseEnt
     public async Task<T> AddAsync(T entity)
     {
         var result = await _innerRepository.AddAsync(entity);
-        
+
         // Cache the new entity
         await _cacheService.SetAsync(GetCacheKey(result.Id), result, _cacheConfig.RepositoryExpiration);
-        
+
         _logger.LogDebug("Added {EntityName} with ID: {Id} and cached", _entityName, result.Id);
-        
+
         return result;
     }
 
@@ -120,12 +120,12 @@ public class CachedRepositoryDecorator<T> : IBaseRepository<T> where T : BaseEnt
     public async Task<T> UpdateAsync(T entity)
     {
         var result = await _innerRepository.UpdateAsync(entity);
-        
+
         // Update cache with new value
         await _cacheService.SetAsync(GetCacheKey(result.Id), result, _cacheConfig.RepositoryExpiration);
-        
+
         _logger.LogDebug("Updated {EntityName} with ID: {Id} and refreshed cache", _entityName, result.Id);
-        
+
         return result;
     }
 
@@ -135,12 +135,12 @@ public class CachedRepositoryDecorator<T> : IBaseRepository<T> where T : BaseEnt
     public async Task<T> DeleteAsync(Guid id)
     {
         var result = await _innerRepository.DeleteAsync(id);
-        
+
         // Remove from cache
         await _cacheService.RemoveAsync(GetCacheKey(id));
-        
+
         _logger.LogDebug("Soft deleted {EntityName} with ID: {Id} and invalidated cache", _entityName, id);
-        
+
         return result;
     }
 
@@ -150,10 +150,10 @@ public class CachedRepositoryDecorator<T> : IBaseRepository<T> where T : BaseEnt
     public async Task DeleteHardAsync(Expression<Func<T, bool>> expression)
     {
         await _innerRepository.DeleteHardAsync(expression);
-        
+
         // Invalidate all caches for this entity type
         await _cacheService.RemoveByPatternAsync(GetCacheKeyPattern());
-        
+
         _logger.LogDebug("Hard deleted {EntityName} entities matching expression and invalidated all related caches", _entityName);
     }
 }

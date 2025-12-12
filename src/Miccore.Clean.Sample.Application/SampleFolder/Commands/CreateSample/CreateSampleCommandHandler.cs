@@ -25,7 +25,7 @@ namespace Miccore.Clean.Sample.Application.SampleFolder.Commands.CreateSample
         protected override async Task<SampleResponse> HandleCommand(CreateSampleCommand request, CancellationToken cancellationToken)
         {
             // map request with the entity
-            var sampleEntity = _mapper.Map<SampleEntity>(request) 
+            var sampleEntity = _mapper.Map<SampleEntity>(request)
                 ?? throw new ApplicationException(ExceptionEnum.MapperIssue.GetEnumDescription());
 
             // add async with the repository

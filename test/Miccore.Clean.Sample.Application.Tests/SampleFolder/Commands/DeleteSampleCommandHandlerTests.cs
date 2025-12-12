@@ -1,14 +1,13 @@
+using AutoMapper;
+using FluentAssertions;
 using Miccore.Clean.Sample.Application.Features.Samples.Commands.DeleteSample;
+using Miccore.Clean.Sample.Application.Features.Samples.Mappers;
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Core.Entities;
 using Miccore.Clean.Sample.Core.Exceptions;
 using Miccore.Clean.Sample.Core.Interfaces;
 using Miccore.Clean.Sample.Core.Repositories;
 using Moq;
-using FluentAssertions;
-using Microsoft.Extensions.Logging;
-using AutoMapper;
-using Miccore.Clean.Sample.Application.Features.Samples.Mappers;
 
 namespace Miccore.Clean.Sample.Application.Tests.SampleFolder.Commands;
 
@@ -16,7 +15,6 @@ public class DeleteSampleCommandHandlerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<ISampleRepository> _sampleRepositoryMock;
-    private readonly Mock<ILogger<DeleteSampleCommandHandler>> _loggerMock;
     private readonly IMapper _mapper;
     private readonly DeleteSampleCommandHandler _handler;
 
@@ -26,11 +24,10 @@ public class DeleteSampleCommandHandlerTests
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _unitOfWorkMock.Setup(u => u.Samples).Returns(_sampleRepositoryMock.Object);
         _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
-        _loggerMock = new Mock<ILogger<DeleteSampleCommandHandler>>();
-        
+
         var config = new MapperConfiguration(cfg => cfg.AddProfile<SampleMappingProfile>());
         _mapper = config.CreateMapper();
-        
+
         _handler = new DeleteSampleCommandHandler(_unitOfWorkMock.Object, _mapper);
     }
 

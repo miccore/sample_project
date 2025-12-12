@@ -27,11 +27,12 @@ public class GetAllSamplesQueryHandlerTests
     public async Task Handle_ShouldReturnListOfSampleResponses()
     {
         // Arrange
-        var query = new GetAllSamplesQuery(new PaginationQuery());  
+        var query = new GetAllSamplesQuery(new PaginationQuery());
         query.Query.Paginate = false;
         query.Query.Page = 1;
         query.Query.Limit = 10;
-        var sampleEntities = new PaginationModel<SampleEntity>{
+        var sampleEntities = new PaginationModel<SampleEntity>
+        {
             Items = new List<SampleEntity>
             {
                 new SampleEntity { Id = Guid.NewGuid(), Name = "Sample 1" },
@@ -59,14 +60,15 @@ public class GetAllSamplesQueryHandlerTests
     public async Task Handle_ShouldReturnEmptyList_WhenNoSamplesExist()
     {
         // Arrange
-        var query = new GetAllSamplesQuery(new PaginationQuery());  
+        var query = new GetAllSamplesQuery(new PaginationQuery());
         query.Query.Paginate = false;
         query.Query.Page = 1;
         query.Query.Limit = 10;
-        var sampleEntities = new PaginationModel<SampleEntity>{
+        var sampleEntities = new PaginationModel<SampleEntity>
+        {
             Items = new List<SampleEntity>()
         };
-        
+
         _sampleRepositoryMock.Setup(repo => repo.GetAllAsync(query.Query))
             .ReturnsAsync(sampleEntities);
 

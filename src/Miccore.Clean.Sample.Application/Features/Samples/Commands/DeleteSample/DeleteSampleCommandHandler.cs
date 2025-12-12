@@ -3,7 +3,7 @@ using Miccore.Clean.Sample.Application.Handlers;
 
 namespace Miccore.Clean.Sample.Application.Features.Samples.Commands.DeleteSample;
 
-public sealed class DeleteSampleCommandHandler(IUnitOfWork unitOfWork, IMapper mapper) 
+public sealed class DeleteSampleCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
     : BaseCommandHandler<DeleteSampleCommand, SampleResponse>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;

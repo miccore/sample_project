@@ -16,7 +16,7 @@ public class ValidationBehaviorTests
         // Arrange
         var validators = Enumerable.Empty<IValidator<TestRequest>>();
         var behavior = new ValidationBehavior<TestRequest, TestResponse>(validators);
-        
+
         var request = new TestRequest { Name = "test" };
         var expectedResponse = new TestResponse { Id = 1 };
         var nextCalled = false;

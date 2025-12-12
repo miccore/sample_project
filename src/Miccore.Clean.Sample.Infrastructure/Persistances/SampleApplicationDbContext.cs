@@ -43,17 +43,17 @@ public class SampleApplicationDbContext(DbContextOptions<SampleApplicationDbCont
             {
                 var parameter = Expression.Parameter(entityType.ClrType, "e");
                 var deletedAtProperty = Expression.Property(parameter, nameof(BaseEntity.DeletedAt));
-                
+
                 // Filter: DeletedAt == 0 || DeletedAt == null
                 var zero = Expression.Constant((long?)0, typeof(long?));
                 var nullValue = Expression.Constant(null, typeof(long?));
-                
+
                 var isZero = Expression.Equal(deletedAtProperty, zero);
                 var isNull = Expression.Equal(deletedAtProperty, nullValue);
                 var filter = Expression.OrElse(isZero, isNull);
-                
+
                 var lambda = Expression.Lambda(filter, parameter);
-                
+
                 modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
             }
         }

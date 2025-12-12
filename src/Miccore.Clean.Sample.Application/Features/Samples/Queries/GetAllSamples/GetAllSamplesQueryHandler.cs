@@ -3,7 +3,7 @@ using Miccore.Clean.Sample.Application.Handlers;
 
 namespace Miccore.Clean.Sample.Application.Features.Samples.Queries.GetAllSamples;
 
-public sealed class GetAllSamplesQueryHandler(ISampleRepository sampleRepository, IMapper mapper) 
+public sealed class GetAllSamplesQueryHandler(ISampleRepository sampleRepository, IMapper mapper)
     : BaseQueryHandler<GetAllSamplesQuery, PaginationModel<SampleResponse>>
 {
     private readonly ISampleRepository _sampleRepository = sampleRepository;
@@ -16,7 +16,7 @@ public sealed class GetAllSamplesQueryHandler(ISampleRepository sampleRepository
     {
         // get items
         var entities = await _sampleRepository.GetAllAsync(request.Query);
-        
+
         // mapping with response
         return _mapper.Map<PaginationModel<SampleResponse>>(entities);
     }

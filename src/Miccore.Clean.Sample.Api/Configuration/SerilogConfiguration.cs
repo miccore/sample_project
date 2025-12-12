@@ -30,7 +30,7 @@ public static class SerilogConfiguration
             {
                 diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value ?? "unknown");
                 diagnosticContext.Set("UserAgent", httpContext.Request.Headers.UserAgent.ToString());
-                
+
                 if (httpContext.Items.TryGetValue("CorrelationId", out var correlationId))
                 {
                     diagnosticContext.Set("CorrelationId", correlationId ?? "unknown");

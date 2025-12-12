@@ -14,7 +14,7 @@ public static class EndpointConfiguration
     {
         services.AddOpenApi();
         services.AddFastEndpoints().SwaggerDocument();
-        
+
         return services;
     }
 

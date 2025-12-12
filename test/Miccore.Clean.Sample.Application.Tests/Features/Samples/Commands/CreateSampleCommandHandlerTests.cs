@@ -1,14 +1,12 @@
 using AutoMapper;
-using Moq;
+using FluentAssertions;
 using Miccore.Clean.Sample.Application.Features.Samples.Commands.CreateSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Application.Tests.Fixtures;
 using Miccore.Clean.Sample.Core.Entities;
 using Miccore.Clean.Sample.Core.Interfaces;
 using Miccore.Clean.Sample.Core.Repositories;
-using Miccore.Clean.Sample.Core.Enums;
-using Miccore.Clean.Sample.Core.Extensions;
-using FluentAssertions;
+using Moq;
 
 namespace Miccore.Clean.Sample.Application.Tests.Sample.Commands;
 
