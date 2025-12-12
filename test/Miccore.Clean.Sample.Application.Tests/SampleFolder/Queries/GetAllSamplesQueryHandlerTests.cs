@@ -1,12 +1,11 @@
 using AutoMapper;
 using FluentAssertions;
-using Miccore.Clean.Sample.Application.SampleFolder.Queries.GetAllSamples;
 using Miccore.Clean.Sample.Application.Features.Samples.Mappers;
 using Miccore.Clean.Sample.Application.Features.Samples.Queries.GetAllSamples;
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Core.Entities;
 using Miccore.Clean.Sample.Core.Repositories;
-using Miccore.Pagination.Model;
+using Miccore.Pagination;
 using Moq;
 using Microsoft.Extensions.Logging;
 
@@ -27,7 +26,7 @@ public class GetAllSamplesQueryHandlerTests
         var config = new MapperConfiguration(cfg => cfg.AddProfile<SampleMappingProfile>());
         _mapper = config.CreateMapper();
         
-        _handler = new GetAllSamplesQueryHandler(_sampleRepositoryMock.Object, _mapper, _loggerMock.Object);
+        _handler = new GetAllSamplesQueryHandler(_sampleRepositoryMock.Object, _mapper);
     }
 
     [Fact]
@@ -35,9 +34,9 @@ public class GetAllSamplesQueryHandlerTests
     {
         // Arrange
         var query = new GetAllSamplesQuery(new PaginationQuery());  
-        query.Query.paginate = false;
-        query.Query.page = 1;
-        query.Query.limit = 10;
+        query.Query.Paginate = false;
+        query.Query.Page = 1;
+        query.Query.Limit = 10;
         var sampleEntities = new PaginationModel<SampleEntity>{
             Items = new List<SampleEntity>
             {
@@ -67,9 +66,9 @@ public class GetAllSamplesQueryHandlerTests
     {
         // Arrange
         var query = new GetAllSamplesQuery(new PaginationQuery());  
-        query.Query.paginate = false;
-        query.Query.page = 1;
-        query.Query.limit = 10;
+        query.Query.Paginate = false;
+        query.Query.Page = 1;
+        query.Query.Limit = 10;
         var sampleEntities = new PaginationModel<SampleEntity>{
             Items = new List<SampleEntity>()
         };

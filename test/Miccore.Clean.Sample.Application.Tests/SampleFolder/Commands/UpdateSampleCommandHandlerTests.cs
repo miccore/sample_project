@@ -1,4 +1,3 @@
-using Miccore.Clean.Sample.Application.SampleFolder.Commands.UpdateSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Commands.UpdateSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Core.Entities;
@@ -27,7 +26,7 @@ public class UpdateSampleCommandHandlerTests
         var config = new MapperConfiguration(cfg => cfg.AddProfile<SampleMappingProfile>());
         _mapper = config.CreateMapper();
         
-        _handler = new UpdateSampleCommandHandler(_sampleRepositoryMock.Object, _mapper, _loggerMock.Object);
+        _handler = new UpdateSampleCommandHandler(_sampleRepositoryMock.Object, _mapper);
     }
 
     [Fact]

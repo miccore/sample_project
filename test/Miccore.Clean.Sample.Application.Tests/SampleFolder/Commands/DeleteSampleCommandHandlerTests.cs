@@ -1,4 +1,3 @@
-using Miccore.Clean.Sample.Application.SampleFolder.Commands.DeleteSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Commands.DeleteSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Core.Entities;
@@ -27,7 +26,7 @@ public class DeleteSampleCommandHandlerTests
         var config = new MapperConfiguration(cfg => cfg.AddProfile<SampleMappingProfile>());
         _mapper = config.CreateMapper();
         
-        _handler = new DeleteSampleCommandHandler(_sampleRepositoryMock.Object, _mapper, _loggerMock.Object);
+        _handler = new DeleteSampleCommandHandler(_sampleRepositoryMock.Object, _mapper);
     }
 
     [Fact]

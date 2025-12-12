@@ -6,7 +6,7 @@
     <PackageReference Include="FastEndpoints.Swagger" Version="7.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.11.4" />
-    <PackageReference Include="Miccore.Net.Pagination" Version="1.0.0" />
+    <PackageReference Include="Miccore.Net.Pagination" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.1" />
     <PackageReference Include="MediatR" Version="14.0.0" />
     <!-- Serilog for structured logging -->

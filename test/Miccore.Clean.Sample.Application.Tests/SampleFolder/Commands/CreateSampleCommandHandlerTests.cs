@@ -1,5 +1,4 @@
 using Moq;
-using Miccore.Clean.Sample.Application.SampleFolder.Commands.CreateSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Commands.CreateSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Core.Entities;
@@ -28,7 +27,7 @@ public class CreateSampleCommandHandlerTests
         var config = new MapperConfiguration(cfg => cfg.AddProfile<SampleMappingProfile>());
         _mapper = config.CreateMapper();
         
-        _handler = new CreateSampleCommandHandler(_sampleRepositoryMock.Object, _mapper, _loggerMock.Object);
+        _handler = new CreateSampleCommandHandler(_sampleRepositoryMock.Object, _mapper);
     }
 
     [Fact]

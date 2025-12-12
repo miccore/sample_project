@@ -15,8 +15,7 @@ global using FastEndpoints;
 global using FastEndpoints.Swagger;
 global using FluentValidation;
 global using MediatR;
-global using Miccore.Pagination.Model;
-global using Miccore.Pagination.Service;
+global using Miccore.Pagination;
 
 // Project namespaces
 global using Miccore.Clean.Sample.Core.ApiModels;

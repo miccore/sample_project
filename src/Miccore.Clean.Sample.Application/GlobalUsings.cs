@@ -13,7 +13,7 @@ global using Microsoft.Extensions.Logging;
 // External packages
 global using AutoMapper;
 global using MediatR;
-global using Miccore.Pagination.Model;
+global using Miccore.Pagination;
 
 // Project namespaces
 global using Miccore.Clean.Sample.Core.Entities;
