@@ -1,0 +1,47 @@
+# Labeler configuration for PR auto-labeling
+# See: https://github.com/actions/labeler
+
+api:
+  - changed-files:
+      - any-glob-to-any-file: 'src/Miccore.Clean.Sample.Api/**/*'
+
+application:
+  - changed-files:
+      - any-glob-to-any-file: 'src/Miccore.Clean.Sample.Application/**/*'
+
+core:
+  - changed-files:
+      - any-glob-to-any-file: 'src/Miccore.Clean.Sample.Core/**/*'
+
+infrastructure:
+  - changed-files:
+      - any-glob-to-any-file: 'src/Miccore.Clean.Sample.Infrastructure/**/*'
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file: 'test/**/*'
+
+configuration:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.json'
+          - '**/*.yml'
+          - '**/*.yaml'
+          - '!.github/**/*'
+
+ci-cd:
+  - changed-files:
+      - any-glob-to-any-file: '.github/**/*'
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.md'
+          - 'docs/**/*'
+
+docker:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'Dockerfile'
+          - 'docker-compose*.yml'
+          - '.dockerignore'

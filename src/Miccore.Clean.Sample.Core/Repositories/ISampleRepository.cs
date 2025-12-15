@@ -1,10 +1,9 @@
-namespace Miccore.Clean.Sample.Core.Repositories
+namespace Miccore.Clean.Sample.Core.Repositories;
+
+/// <summary>
+/// Interface for the Sample repository.
+/// </summary>
+public interface ISampleRepository : IBaseRepository<SampleEntity>
 {
-    /// <summary>
-    /// Interface for the Sample repository.
-    /// </summary>
-    public interface ISampleRepository : IBaseRepository<SampleEntity>
-    {
-        // Additional methods specific to Sample repository can be added here.
-    }
+    // Additional methods specific to Sample repository can be added here.
 }

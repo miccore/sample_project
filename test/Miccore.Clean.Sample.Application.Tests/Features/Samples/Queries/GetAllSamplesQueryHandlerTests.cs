@@ -4,7 +4,7 @@ using Miccore.Clean.Sample.Application.Features.Samples.Queries.GetAllSamples;
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Application.Tests.Fixtures;
 using Miccore.Clean.Sample.Core.Entities;
-using Miccore.Clean.Sample.Core.Repositories;
+using Miccore.Clean.Sample.Core.Repositories.Base;
 using Miccore.Pagination;
 using Moq;
 
@@ -12,13 +12,13 @@ namespace Miccore.Clean.Sample.Application.Tests.Sample.Queries;
 
 public class GetAllSamplesQueryHandlerTests
 {
-    private readonly Mock<ISampleRepository> _sampleRepositoryMock;
+    private readonly Mock<IReadOnlyRepository<SampleEntity>> _sampleRepositoryMock;
     private readonly IMapper _mapper;
     private readonly GetAllSamplesQueryHandler _handler;
 
     public GetAllSamplesQueryHandlerTests()
     {
-        _sampleRepositoryMock = new Mock<ISampleRepository>();
+        _sampleRepositoryMock = new Mock<IReadOnlyRepository<SampleEntity>>();
         _mapper = TestMapperFactory.Create();
         _handler = new GetAllSamplesQueryHandler(_sampleRepositoryMock.Object, _mapper);
     }

@@ -1,6 +1,4 @@
 using FluentValidation;
-using MediatR;
-using Miccore.Clean.Sample.Core.Exceptions;
 
 namespace Miccore.Clean.Sample.Application.Behaviors;
 

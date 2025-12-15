@@ -27,6 +27,7 @@ public static class DependencyInjection
 
         // add repositories
         #region repositories
+        services.TryAddScoped(typeof(IReadOnlyRepository<>), typeof(BaseRepository<>));
         services.TryAddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
         services.TryAddScoped<ISampleRepository, SampleRepository>();
         #endregion

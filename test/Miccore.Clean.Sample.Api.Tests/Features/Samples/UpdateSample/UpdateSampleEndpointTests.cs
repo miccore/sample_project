@@ -1,12 +1,12 @@
+using FastEndpoints;
 using FluentAssertions;
 using FluentValidation.Results;
 using MediatR;
-using Moq;
 using Miccore.Clean.Sample.Api.Features.Samples.UpdateSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Commands.UpdateSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Core.Exceptions;
-using FastEndpoints;
+using Moq;
 
 namespace Miccore.Clean.Sample.Api.Tests.Features.Samples.UpdateSample;
 

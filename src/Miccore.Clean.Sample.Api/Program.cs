@@ -1,6 +1,6 @@
+using Miccore.Clean.Sample.Api.Configuration;
 using Miccore.Clean.Sample.Application;
 using Miccore.Clean.Sample.Infrastructure;
-using Miccore.Clean.Sample.Api.Configuration;
 using Serilog;
 
 // Configure Serilog early for bootstrap logging
@@ -16,6 +16,9 @@ try
 
     // Configure Serilog
     builder.Host.ConfigureSerilog();
+
+    // configure serviceDefaults
+    builder.AddServiceDefaults();
 
     // Add services
     builder.Services

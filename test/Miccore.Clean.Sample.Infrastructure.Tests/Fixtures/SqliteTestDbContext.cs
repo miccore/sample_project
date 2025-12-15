@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using Miccore.Clean.Sample.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Miccore.Clean.Sample.Infrastructure.Tests.Fixtures;
 

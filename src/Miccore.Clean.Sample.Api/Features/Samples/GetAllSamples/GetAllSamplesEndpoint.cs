@@ -1,6 +1,6 @@
+using Miccore.Clean.Sample.Api.Endpoints;
 using Miccore.Clean.Sample.Api.Features.Samples.Common;
 using Miccore.Clean.Sample.Application.Features.Samples.Queries.GetAllSamples;
-using Miccore.Clean.Sample.Api.Endpoints;
 
 namespace Miccore.Clean.Sample.Api.Features.Samples.GetAllSamples;
 

@@ -1,8 +1,6 @@
-using AutoMapper;
 using Miccore.Clean.Sample.Application.Features.Samples.Commands.CreateSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Commands.UpdateSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
-using Miccore.Clean.Sample.Core.Entities;
 
 namespace Miccore.Clean.Sample.Application.Features.Samples.Mappers;
 

@@ -1,9 +1,3 @@
-using System.Net;
-using FastEndpoints;
-using Microsoft.AspNetCore.Http;
-using Miccore.Clean.Sample.Core.ApiModels;
-using Miccore.Clean.Sample.Core.Exceptions;
-
 namespace Miccore.Clean.Sample.Api.Endpoints;
 
 /// <summary>

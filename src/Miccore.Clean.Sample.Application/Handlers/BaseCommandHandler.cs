@@ -1,5 +1,3 @@
-using MediatR;
-
 namespace Miccore.Clean.Sample.Application.Handlers;
 
 /// <summary>

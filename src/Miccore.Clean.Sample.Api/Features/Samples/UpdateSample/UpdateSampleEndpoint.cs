@@ -1,6 +1,6 @@
-using Miccore.Clean.Sample.Application.Features.Samples.Commands.UpdateSample;
-using Miccore.Clean.Sample.Api.Features.Samples.Common;
 using Miccore.Clean.Sample.Api.Endpoints;
+using Miccore.Clean.Sample.Api.Features.Samples.Common;
+using Miccore.Clean.Sample.Application.Features.Samples.Commands.UpdateSample;
 
 namespace Miccore.Clean.Sample.Api.Features.Samples.UpdateSample;
 
