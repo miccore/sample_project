@@ -8,6 +8,79 @@ Le projet suit les principes de la **Clean Architecture** (Architecture Hexagona
 
 ### Structure de la Solution
 
+```
+Miccore.Clean.Sample/
+├── 📁 src/
+│   ├── 📁 Miccore.Clean.Sample.Api/           # Point d'entrée REST API
+│   │   ├── Configuration/                      # Config (Serilog, Swagger, DI)
+│   │   ├── Endpoints/                          # FastEndpoints (REPR pattern)
+│   │   │   └── BaseEndpoint.cs
+│   │   ├── Features/
+│   │   │   └── Samples/                        # Endpoints par feature
+│   │   ├── Middleware/                         # Exception, CorrelationId
+│   │   └── Program.cs
+│   │
+│   ├── 📁 Miccore.Clean.Sample.Application/   # Logique métier (Use Cases)
+│   │   ├── Behaviors/                          # MediatR Pipelines
+│   │   │   ├── LoggingBehavior.cs
+│   │   │   └── ValidationBehavior.cs
+│   │   ├── Features/
+│   │   │   └── Samples/
+│   │   │       ├── Commands/                   # Create, Update, Delete
+│   │   │       │   └── CreateSample/
+│   │   │       │       ├── CreateSampleCommand.cs
+│   │   │       │       ├── CreateSampleCommandHandler.cs
+│   │   │       │       └── CreateSampleValidator.cs
+│   │   │       ├── Queries/                    # Get, GetAll
+│   │   │       │   └── GetAllSamples/
+│   │   │       │       ├── GetAllSamplesQuery.cs
+│   │   │       │       └── GetAllSamplesQueryHandler.cs
+│   │   │       ├── Mappers/
+│   │   │       └── Responses/
+│   │   └── Handlers/                           # Base handlers (Command/Query)
+│   │
+│   ├── 📁 Miccore.Clean.Sample.Core/          # Domaine (aucune dépendance)
+│   │   ├── ApiModels/                          # ApiResponse<T>, ApiError
+│   │   ├── Entities/                           # BaseEntity, SampleEntity
+│   │   ├── Exceptions/                         # NotFoundException, ValidatorException
+│   │   ├── Interfaces/                         # IUnitOfWork, ICacheService
+│   │   └── Repositories/
+│   │       ├── Base/
+│   │       │   ├── IReadOnlyRepository.cs      # Queries (ISP)
+│   │       │   └── IBaseRepository.cs          # Commands (hérite IReadOnlyRepository)
+│   │       └── ISampleRepository.cs
+│   │
+│   └── 📁 Miccore.Clean.Sample.Infrastructure/ # Implémentation technique
+│       ├── Caching/
+│       │   ├── MemoryCacheService.cs
+│       │   └── CachedRepositoryDecorator.cs    # Decorator Pattern
+│       ├── Persistances/
+│       │   ├── SampleApplicationDbContext.cs
+│       │   └── UnitOfWork.cs
+│       └── Repositories/
+│           ├── Base/
+│           │   └── BaseRepository.cs
+│           └── SampleRepository.cs
+│
+├── 📁 test/
+│   ├── Miccore.Clean.Sample.Api.Tests/
+│   ├── Miccore.Clean.Sample.Application.Tests/
+│   ├── Miccore.Clean.Sample.Core.Tests/
+│   └── Miccore.Clean.Sample.Infrastructure.Tests/
+│
+├── 📁 .github/
+│   ├── workflows/
+│   │   ├── ci.yml                              # Build, Test, Code Quality, Security
+│   │   ├── pr-check.yml                        # PR validation + Auto-labeling
+│   │   └── dependency-review.yml
+│   └── labeler.yml
+│
+├── .editorconfig
+├── Directory.Build.props
+├── Dockerfile
+└── Miccore.Clean.Sample.sln
+```
+
 La solution est divisée en 4 couches principales :
 
 1.  **Core** (`Miccore.Clean.Sample.Core`) : Le cœur du domaine.
@@ -22,13 +95,19 @@ La solution est divisée en 4 couches principales :
 ### 1. Core (Domaine)
 Cette couche ne dépend d'aucun autre projet. Elle contient :
 -   **Entities** : Les objets métier persistants (ex: `SampleEntity`).
--   **Interfaces** : Les contrats pour les repositories (`ISampleRepository`) et services (`ICacheService`).
+-   **Interfaces** : Les contrats pour les repositories et services.
+    -   `IReadOnlyRepository<T>` : Opérations de lecture seule (ISP).
+    -   `IBaseRepository<T>` : Opérations CRUD (hérite de `IReadOnlyRepository`).
+    -   `IUnitOfWork` : Gestion des transactions.
+    -   `ICacheService` : Abstraction du cache.
 -   **Exceptions** : Les exceptions personnalisées (`NotFoundException`, `ValidatorException`).
 -   **ApiModels** : Les modèles de réponse standardisés (`ApiResponse<T>`, `ApiError`).
 
 ### 2. Application (Use Cases)
 Cette couche orchestre la logique métier. Elle dépend de `Core`.
 -   **Pattern CQRS** : Séparation des lectures (Queries) et écritures (Commands) via **MediatR**.
+    -   Les **Queries** injectent `IReadOnlyRepository<T>` (lecture seule).
+    -   Les **Commands** injectent les repositories spécifiques + `IUnitOfWork`.
 -   **Features** : Organisation verticale par fonctionnalité (ex: `Features/Samples/Commands/CreateSample`).
 -   **Behaviors** : Pipelines transversaux pour MediatR :
     -   `ValidationBehavior` : Valide automatiquement les requêtes via FluentValidation.
@@ -39,8 +118,9 @@ Cette couche orchestre la logique métier. Elle dépend de `Core`.
 ### 3. Infrastructure
 Cette couche implémente les interfaces définies dans `Core`. Elle dépend de `Core`.
 -   **Persistance** : Entity Framework Core avec `SampleApplicationDbContext`.
+-   **Unit of Work** : `UnitOfWork` gère les transactions et expose `SaveChangesAsync`.
 -   **Repositories** :
-    -   `BaseRepository<T>` : Implémentation générique CRUD.
+    -   `BaseRepository<T>` : Implémentation générique CRUD (implémente `IBaseRepository<T>`).
     -   `SampleRepository` : Implémentation spécifique.
 -   **Caching** :
     -   `MemoryCacheService` : Wrapper autour de IMemoryCache.
@@ -72,21 +152,33 @@ Prenons l'exemple d'une création (`CreateSample`) :
     -   `ValidationBehavior` exécute `CreateSampleValidator`. Si invalide -> `ValidatorException`.
 7.  **Handler (Application)** : `CreateSampleCommandHandler` traite la commande.
     -   Appelle `ISampleRepository.AddAsync`.
+    -   Appelle `IUnitOfWork.SaveChangesAsync` pour persister.
     -   Mappe l'entité créée en `SampleResponse`.
-8.  **Repository (Infrastructure)** : `SampleRepository` (via `BaseRepository`) enregistre en BDD via EF Core.
-9.  **Réponse** : Le résultat remonte la chaîne et est renvoyé au client en JSON standardisé.
+8.  **Repository (Infrastructure)** : `SampleRepository` (via `BaseRepository`) prépare l'entité pour EF Core.
+9.  **Unit of Work** : Persiste les changements en BDD via `SaveChangesAsync`.
+10. **Réponse** : Le résultat remonte la chaîne et est renvoyé au client en JSON standardisé.
 
 ---
 
 ## 🛠 Patterns Clés
 
 ### CQRS (Command Query Responsibility Segregation)
--   **Commands** : Modifient l'état (Create, Update, Delete). Retournent souvent l'ID ou l'objet créé.
--   **Queries** : Lisent l'état (Get, List). Ne modifient jamais les données.
+-   **Commands** : Modifient l'état (Create, Update, Delete). Utilisent `IUnitOfWork` pour persister.
+-   **Queries** : Lisent l'état (Get, List). Utilisent `IReadOnlyRepository<T>` (lecture seule).
 -   Utilisation de `MediatR` pour découpler l'émetteur (Endpoint) du traitant (Handler).
 
+### Unit of Work
+-   Centralise la gestion des transactions.
+-   Les repositories n'appellent plus `SaveChangesAsync` directement.
+-   Permet de regrouper plusieurs opérations en une seule transaction.
+
+### Interface Segregation (ISP)
+-   `IReadOnlyRepository<T>` : Méthodes de lecture (`GetAllAsync`, `GetByIdAsync`, etc.).
+-   `IBaseRepository<T>` : Hérite de `IReadOnlyRepository` + méthodes d'écriture (`AddAsync`, `UpdateAsync`, `DeleteAsync`).
+-   Les Queries n'ont accès qu'aux méthodes de lecture, renforçant le pattern CQRS.
+
 ### Repository & Decorator
--   L'accès aux données est abstrait via `IBaseRepository<T>`.
+-   L'accès aux données est abstrait via `IReadOnlyRepository<T>` et `IBaseRepository<T>`.
 -   Le **Decorator Pattern** (`CachedRepositoryDecorator`) permet d'ajouter du cache sans modifier le code métier ni le repository SQL.
     -   *Lecture* : Vérifie le cache -> Si absent, appelle la BDD -> Met en cache.
     -   *Écriture* : Écrit en BDD -> Invalide le cache associé.
@@ -121,10 +213,24 @@ Le projet contient une suite de tests complète dans le dossier `test/` :
 
 ## 🚀 Démarrage
 
-1.  **Prérequis** : .NET 9.0 SDK.
+1.  **Prérequis** : .NET 10.0 SDK.
 2.  **Configuration** : Vérifier `appsettings.json` (ConnectionStrings).
 3.  **Lancement** :
     ```bash
     dotnet run --project src/Miccore.Clean.Sample.Api
     ```
 4.  **Swagger** : Accessible via `/swagger` (en environnement Development).
+
+---
+
+## ✅ Principes SOLID
+
+Ce projet respecte les 5 principes SOLID :
+
+| Principe | Application |
+|----------|-------------|
+| **SRP** | Un handler par commande/requête, un endpoint par action |
+| **OCP** | Behaviors MediatR, Decorator pour le cache |
+| **LSP** | Tous les repositories sont interchangeables via leurs interfaces |
+| **ISP** | `IReadOnlyRepository` vs `IBaseRepository`, interfaces spécifiques par feature |
+| **DIP** | Injection de dépendances partout, aucune dépendance concrète dans Application/Core |
