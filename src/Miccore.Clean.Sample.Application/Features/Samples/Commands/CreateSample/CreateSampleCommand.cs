@@ -1,19 +1,18 @@
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 
-namespace Miccore.Clean.Sample.Application.Features.Samples.Commands.CreateSample
+namespace Miccore.Clean.Sample.Application.Features.Samples.Commands.CreateSample;
+
+/// <summary>
+/// Command to create a new sample
+/// </summary>
+public record CreateSampleCommand : IRequest<SampleResponse>
 {
     /// <summary>
-    /// Command to create a new sample
+    /// Gets or sets the name of the sample
     /// </summary>
-    public record CreateSampleCommand : IRequest<SampleResponse>
+    public string? Name
     {
-        /// <summary>
-        /// Gets or sets the name of the sample
-        /// </summary>
-        public string? Name
-        {
-            get;
-            set;
-        }
+        get;
+        set;
     }
 }

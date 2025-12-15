@@ -1,7 +1,4 @@
-using System.Net;
 using System.Text.Json;
-using Miccore.Clean.Sample.Core.ApiModels;
-using Miccore.Clean.Sample.Core.Exceptions;
 
 namespace Miccore.Clean.Sample.Api.Middleware;
 

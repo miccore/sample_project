@@ -1,12 +1,13 @@
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Application.Handlers;
+using Miccore.Clean.Sample.Core.Repositories.Base;
 
 namespace Miccore.Clean.Sample.Application.Features.Samples.Queries.GetAllSamples;
 
-public sealed class GetAllSamplesQueryHandler(ISampleRepository sampleRepository, IMapper mapper)
+public sealed class GetAllSamplesQueryHandler(IReadOnlyRepository<SampleEntity> sampleRepository, IMapper mapper)
     : BaseQueryHandler<GetAllSamplesQuery, PaginationModel<SampleResponse>>
 {
-    private readonly ISampleRepository _sampleRepository = sampleRepository;
+    private readonly IReadOnlyRepository<SampleEntity> _sampleRepository = sampleRepository;
     private readonly IMapper _mapper = mapper;
 
     /// <summary>

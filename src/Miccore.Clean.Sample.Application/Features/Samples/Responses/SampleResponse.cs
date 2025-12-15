@@ -1,17 +1,16 @@
-namespace Miccore.Clean.Sample.Application.Features.Samples.Responses
+namespace Miccore.Clean.Sample.Application.Features.Samples.Responses;
+
+/// <summary>
+/// Sample response
+/// </summary>
+public class SampleResponse : BaseEntity
 {
     /// <summary>
-    /// Sample response
+    /// Gets or sets the name of the sample
     /// </summary>
-    public class SampleResponse : BaseEntity
+    public string? Name
     {
-        /// <summary>
-        /// Gets or sets the name of the sample
-        /// </summary>
-        public string? Name
-        {
-            get;
-            set;
-        }
+        get;
+        set;
     }
 }

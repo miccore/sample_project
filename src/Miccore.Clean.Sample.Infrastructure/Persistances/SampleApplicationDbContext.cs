@@ -1,5 +1,3 @@
-using Miccore.Clean.Sample.Core.Configurations;
-
 namespace Miccore.Clean.Sample.Infrastructure.Persistance;
 
 /// <summary>

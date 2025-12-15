@@ -1,8 +1,7 @@
-namespace Miccore.Clean.Sample.Api.Features.Samples.CreateSample
+namespace Miccore.Clean.Sample.Api.Features.Samples.CreateSample;
+
+public class CreateSampleRequest
 {
-    public class CreateSampleRequest
-    {
-        [Required]
-        public string? Name { get; set; }
-    }
+    [Required]
+    public string? Name { get; set; }
 }

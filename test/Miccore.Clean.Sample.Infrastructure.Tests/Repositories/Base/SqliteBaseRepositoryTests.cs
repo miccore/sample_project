@@ -1,8 +1,8 @@
+using FluentAssertions;
 using Miccore.Clean.Sample.Core.Entities;
 using Miccore.Clean.Sample.Core.Exceptions;
 using Miccore.Clean.Sample.Infrastructure.Tests.Fixtures;
 using Miccore.Pagination;
-using FluentAssertions;
 
 namespace Miccore.Clean.Sample.Infrastructure.Tests.Repositories.Base;
 

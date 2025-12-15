@@ -1,13 +1,11 @@
 using Miccore.Clean.Sample.Api.Features.Samples.CreateSample;
+using Miccore.Clean.Sample.Api.Features.Samples.DeleteSample;
 using Miccore.Clean.Sample.Api.Features.Samples.GetSample;
 using Miccore.Clean.Sample.Api.Features.Samples.UpdateSample;
-using Miccore.Clean.Sample.Api.Features.Samples.DeleteSample;
-using Miccore.Clean.Sample.Api.Features.Samples.GetAllSamples;
 using Miccore.Clean.Sample.Application.Features.Samples.Commands.CreateSample;
-using Miccore.Clean.Sample.Application.Features.Samples.Commands.UpdateSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Commands.DeleteSample;
+using Miccore.Clean.Sample.Application.Features.Samples.Commands.UpdateSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Queries.GetSample;
-using Miccore.Clean.Sample.Application.Features.Samples.Queries.GetAllSamples;
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 
 namespace Miccore.Clean.Sample.Api.Features.Samples.Common;

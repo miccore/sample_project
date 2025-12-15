@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using FluentAssertions;
 using Miccore.Clean.Sample.Core.Configurations;
 using Miccore.Clean.Sample.Core.Entities.Base;
@@ -8,7 +9,6 @@ using Miccore.Pagination;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using System.Linq.Expressions;
 
 namespace Miccore.Clean.Sample.Infrastructure.Tests.Caching;
 

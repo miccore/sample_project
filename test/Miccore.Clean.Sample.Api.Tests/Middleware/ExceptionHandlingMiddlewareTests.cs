@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text.Json;
 using FluentAssertions;
 using Miccore.Clean.Sample.Api.Middleware;
 using Miccore.Clean.Sample.Core.Exceptions;

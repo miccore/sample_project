@@ -1,24 +1,24 @@
 using AutoMapper;
+using FluentAssertions;
 using Miccore.Clean.Sample.Application.Features.Samples.Queries.GetSample;
 using Miccore.Clean.Sample.Application.Features.Samples.Responses;
 using Miccore.Clean.Sample.Application.Tests.Fixtures;
 using Miccore.Clean.Sample.Core.Entities;
 using Miccore.Clean.Sample.Core.Exceptions;
-using Miccore.Clean.Sample.Core.Repositories;
+using Miccore.Clean.Sample.Core.Repositories.Base;
 using Moq;
-using FluentAssertions;
 
 namespace Miccore.Clean.Sample.Application.Tests.Sample.Queries;
 
 public class GetSampleQueryHandlerTests
 {
-    private readonly Mock<ISampleRepository> _sampleRepositoryMock;
+    private readonly Mock<IReadOnlyRepository<SampleEntity>> _sampleRepositoryMock;
     private readonly IMapper _mapper;
     private readonly GetSampleQueryHandler _handler;
 
     public GetSampleQueryHandlerTests()
     {
-        _sampleRepositoryMock = new Mock<ISampleRepository>();
+        _sampleRepositoryMock = new Mock<IReadOnlyRepository<SampleEntity>>();
         _mapper = TestMapperFactory.Create();
         _handler = new GetSampleQueryHandler(_sampleRepositoryMock.Object, _mapper);
     }

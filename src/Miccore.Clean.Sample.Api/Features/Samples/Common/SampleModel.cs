@@ -1,14 +1,13 @@
-namespace Miccore.Clean.Sample.Api.Features.Samples.Common
+namespace Miccore.Clean.Sample.Api.Features.Samples.Common;
+
+public class SampleModel : BaseEntity
 {
-    public class SampleModel : BaseEntity
+    /// <summary>
+    /// Gets or sets the name of the sample
+    /// </summary>
+    public string? Name
     {
-        /// <summary>
-        /// Gets or sets the name of the sample
-        /// </summary>
-        public string? Name
-        {
-            get;
-            set;
-        }
+        get;
+        set;
     }
 }
