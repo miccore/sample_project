@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Miccore",
+  "classifications": [
+    "Web",
+    "API",
+    "Clean Architecture",
+    "Microservice",
+    "CQRS"
+  ],
+  "identity": "Miccore.CleanArchitecture.Template",
+  "name": "Miccore Clean Architecture Microservice",
+  "shortName": "miccore-clean",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "Miccore.Clean.Sample",
+  "preferNameDirectory": true,
+  "symbols": {
+    "databaseProvider": {
+      "type": "parameter",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "MySQL",
+          "description": "Use MySQL/MariaDB with Pomelo provider"
+        },
+        {
+          "choice": "PostgreSQL",
+          "description": "Use PostgreSQL with Npgsql provider"
+        },
+        {
+          "choice": "SqlServer",
+          "description": "Use SQL Server with Microsoft provider"
+        }
+      ],
+      "defaultValue": "MySQL",
+      "description": "Database provider to use"
+    },
+    "includeTests": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "true",
+      "description": "Include test projects in the solution"
+    },
+    "includeDocker": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "true",
+      "description": "Include Dockerfile and .dockerignore"
+    },
+    "useMySql": {
+      "type": "computed",
+      "value": "(databaseProvider == \"MySQL\")"
+    },
+    "usePostgreSql": {
+      "type": "computed",
+      "value": "(databaseProvider == \"PostgreSQL\")"
+    },
+    "useSqlServer": {
+      "type": "computed",
+      "value": "(databaseProvider == \"SqlServer\")"
+    }
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "condition": "(!includeTests)",
+          "exclude": [
+            "test/**/*"
+          ]
+        },
+        {
+          "condition": "(!includeDocker)",
+          "exclude": [
+            "Dockerfile",
+            ".dockerignore"
+          ]
+        },
+        {
+          "exclude": [
+            ".github/**/*",
+            "**/bin/**",
+            "**/obj/**",
+            "**/.vs/**",
+            "**/.vscode/**",
+            "**/logs/**",
+            "**/*.user",
+            "**/.git/**",
+            ".template.config/**/*"
+          ]
+        }
+      ]
+    }
+  ],
+  "guids": [
+    "827E0CD3-B72D-47B6-A68D-7590B98EB39B",
+    "FA4A16FA-4767-4C3D-9B7E-EEAF0AB900D3",
+    "8A7F23F7-0A11-0A74-A198-39294561CCF9",
+    "0F351463-FA06-4BFE-AA3A-0C7C104C4367",
+    "9DE39439-5537-4A2F-8897-66C85714BF26",
+    "7D93EE83-989C-4E78-8135-C4AA0818B76F",
+    "183598AF-3649-4C85-97FE-F2BF4D01ECE1",
+    "D91C6FD9-9CE0-455A-B6DD-F636E7C7AE44",
+    "1985829A-8FAD-450C-9C23-2282C81F6DDD",
+    "BDCB354C-49DE-41E2-A46E-CBBA7F4CE718",
+    "BA1F5DB3-27CC-4E8D-A310-635EF87E4029"
+  ],
+  "forms": {
+    "identity": {
+      "exclude": [
+        "Miccore\\.Net\\..*",
+        "Miccore\\.SharedKernel\\..*"
+      ]
+    }
+  },
+  "primaryOutputs": [
+    {
+      "path": "Miccore.Clean.Sample.sln"
+    }
+  ],
+  "postActions": []
+}

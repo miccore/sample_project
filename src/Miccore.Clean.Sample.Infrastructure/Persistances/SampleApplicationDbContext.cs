@@ -24,7 +24,15 @@ public class SampleApplicationDbContext(DbContextOptions<SampleApplicationDbCont
         // Configure DbContext to use MySQL with Pomelo provider
         // ServerVersion.AutoDetect will automatically detect the MySQL/MariaDB version
         var connectionString = dbConfig.GetConnectionString();
+<!--#if (useMySql)-->
         optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+<!--#endif-->
+<!--#if (usePostgreSql)-->
+        optionsBuilder.UseNpgsql(connectionString);
+<!--#endif-->
+<!--#if (useSqlServer)-->
+        optionsBuilder.UseSqlServer(connectionString);
+<!--#endif-->
     }
 
     /// <summary>
