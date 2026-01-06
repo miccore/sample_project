@@ -1,6 +1,64 @@
-# Documentation de l'Architecture du Projet
+# Miccore.Clean.Sample
 
-Ce document décrit l'architecture technique, les choix de conception et le fonctionnement du projet `Miccore.Clean.Sample`.
+<!--#if (useMySql)-->
+> 🚀 Clean Architecture microservice template with **MySQL** database provider
+<!--#endif-->
+<!--#if (usePostgreSql)-->
+> 🚀 Clean Architecture microservice template with **PostgreSQL** database provider
+<!--#endif-->
+<!--#if (useSqlServer)-->
+> 🚀 Clean Architecture microservice template with **SQL Server** database provider
+<!--#endif-->
+
+Ce projet est basé sur le template **Miccore Clean Architecture** qui implémente les meilleures pratiques d'architecture logicielle pour les microservices .NET.
+
+## 📦 Installation du Template
+
+Si vous souhaitez créer de nouveaux projets à partir de ce template :
+
+```bash
+# Installer le template depuis NuGet
+dotnet new install Miccore.CleanArchitecture.Template
+
+# Créer un nouveau projet (nom simple)
+dotnet new miccore-clean -n MonProjet
+
+# Créer un nouveau projet (nom composé - recommandé)
+dotnet new miccore-clean -n Acme.Ecommerce.Catalog
+
+# Avec PostgreSQL au lieu de MySQL
+dotnet new miccore-clean -n MonProjet --databaseProvider PostgreSQL
+
+# Sans les projets de tests
+dotnet new miccore-clean -n MonProjet --includeTests false
+
+# Sans le support Docker
+dotnet new miccore-clean -n MonProjet --includeDocker false
+
+# Voir tous les paramètres disponibles
+dotnet new miccore-clean --help
+```
+
+### Paramètres Disponibles
+
+| Paramètre | Type | Valeur par défaut | Description |
+|-----------|------|-------------------|-------------|
+| `--databaseProvider` | choice | MySQL | Fournisseur de base de données : `MySQL`, `PostgreSQL`, ou `SqlServer` |
+| `--includeTests` | bool | true | Inclure les projets de tests dans la solution |
+| `--includeDocker` | bool | true | Inclure le Dockerfile et .dockerignore |
+
+### Recommandations de Nommage
+
+Pour les projets d'entreprise, nous recommandons d'utiliser un format en 3 parties :
+- **Format** : `Company.Service.Component`
+- **Exemples** :
+  - `Acme.Ecommerce.Catalog`
+  - `Contoso.Crm.Api`
+  - `Fabrikam.Inventory.Service`
+
+Les noms simples sont également acceptés (exemple : `MonProjet`), mais le format composé améliore l'organisation dans les grandes structures.
+
+---
 
 ## 🏗 Vue d'ensemble
 
@@ -195,31 +253,145 @@ Prenons l'exemple d'une création (`CreateSample`) :
 
 ---
 
-## 🧪 Stratégie de Tests
+<!--#if (includeTests)-->
+## 🧪 Tests
 
-Le projet contient une suite de tests complète dans le dossier `test/` :
+Le projet inclut une suite de tests complète :
 
--   **Unit Tests** :
-    -   `Core.Tests` : Teste les entités, extensions et helpers.
-    -   `Application.Tests` : Teste les Handlers, Validators et Mappings (Mock des repositories).
-    -   `Infrastructure.Tests` : Teste les implémentations de cache et repositories (souvent avec une BDD en mémoire ou SQLite).
-    -   `Api.Tests` : Teste les Endpoints, Middlewares et le Mapping HTTP.
+```bash
+# Exécuter tous les tests
+dotnet test
 
--   **Couverture de Code** :
-    -   Objectif : > 70%.
-    -   Outils : `coverlet` et `ReportGenerator`.
+# Avec rapport de couverture
+dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+
+# Exécuter les tests d'un projet spécifique
+dotnet test test/Miccore.Clean.Sample.Application.Tests
+```
+
+### Structure des Tests
+
+- **Core.Tests** : Tests unitaires des entités, extensions et helpers
+- **Application.Tests** : Tests des handlers, validateurs et mappings (avec mocks)
+- **Infrastructure.Tests** : Tests des repositories et du cache
+- **Api.Tests** : Tests des endpoints et middleware
+
+Objectif de couverture : **> 70%**
+<!--#endif-->
+
+---
+
+## 📚 Documentation Complémentaire
+
+- **[Architecture détaillée](docs/architecture.md)** - Vue approfondie de l'architecture (si applicable)
+- **[Configuration de la base de données](src/Miccore.Clean.Sample.Infrastructure/Persistances/DatabaseProviderConfiguration.md)** - Guide complet des providers supportés
+- **[Patterns utilisés](#-patterns-clés)** - Voir ci-dessous
 
 ---
 
 ## 🚀 Démarrage
 
-1.  **Prérequis** : .NET 10.0 SDK.
-2.  **Configuration** : Vérifier `appsettings.json` (ConnectionStrings).
-3.  **Lancement** :
-    ```bash
-    dotnet run --project src/Miccore.Clean.Sample.Api
-    ```
-4.  **Swagger** : Accessible via `/swagger` (en environnement Development).
+### Prérequis
+
+- **.NET 10.0 SDK** : [Télécharger ici](https://dotnet.microsoft.com/download/dotnet/10.0)
+<!--#if (useMySql)-->
+- **MySQL/MariaDB** : Serveur de base de données (ou via Docker)
+<!--#endif-->
+<!--#if (usePostgreSql)-->
+- **PostgreSQL** : Serveur de base de données (ou via Docker)
+<!--#endif-->
+<!--#if (useSqlServer)-->
+- **SQL Server** : Serveur de base de données (ou SQL Server Express/Docker)
+<!--#endif-->
+
+### Configuration de la Base de Données
+
+1. **Configurer la chaîne de connexion** dans `src/Miccore.Clean.Sample.Api/appsettings.json` :
+
+<!--#if (useMySql)-->
+```json
+{
+  "DatabaseConfiguration": {
+    "Server": "localhost",
+    "Port": 3306,
+    "Database": "votre_base_de_donnees",
+    "UserId": "votre_utilisateur",
+    "Password": "votre_mot_de_passe"
+  }
+}
+```
+<!--#endif-->
+<!--#if (usePostgreSql)-->
+```json
+{
+  "DatabaseConfiguration": {
+    "Server": "localhost",
+    "Port": 5432,
+    "Database": "votre_base_de_donnees",
+    "UserId": "votre_utilisateur",
+    "Password": "votre_mot_de_passe"
+  }
+}
+```
+<!--#endif-->
+<!--#if (useSqlServer)-->
+```json
+{
+  "DatabaseConfiguration": {
+    "Server": "localhost",
+    "Port": 1433,
+    "Database": "votre_base_de_donnees",
+    "UserId": "votre_utilisateur",
+    "Password": "votre_mot_de_passe"
+  }
+}
+```
+<!--#endif-->
+
+2. **Créer et appliquer les migrations** :
+
+```bash
+# Créer la première migration
+dotnet ef migrations add InitialCreate --project src/Miccore.Clean.Sample.Infrastructure --startup-project src/Miccore.Clean.Sample.Api
+
+# Appliquer la migration à la base de données
+dotnet ef database update --project src/Miccore.Clean.Sample.Infrastructure --startup-project src/Miccore.Clean.Sample.Api
+```
+
+> 💡 **Note** : Consultez [DatabaseProviderConfiguration.md](src/Miccore.Clean.Sample.Infrastructure/Persistances/DatabaseProviderConfiguration.md) pour des exemples détaillés de configuration selon votre fournisseur de base de données, y compris les différences de comportement et les meilleures pratiques.
+
+### Lancement de l'Application
+
+```bash
+# Restaurer les dépendances
+dotnet restore
+
+# Compiler la solution
+dotnet build
+
+# Lancer l'API
+dotnet run --project src/Miccore.Clean.Sample.Api
+```
+
+L'API sera accessible à l'adresse : `https://localhost:5001` (ou le port configuré)
+
+### Documentation Swagger
+
+En mode **Development**, Swagger est accessible via :
+- URL : `https://localhost:5001/swagger`
+- Documentation interactive de tous les endpoints disponibles
+
+<!--#if (includeDocker)-->
+### Démarrage avec Docker
+
+```bash
+# Construire l'image
+docker build -t miccore-clean-sample .
+
+# Lancer le conteneur
+docker run -p 8080:8080 miccore-clean-sample
+```
+<!--#endif-->
 
 ---
 
@@ -234,3 +406,35 @@ Ce projet respecte les 5 principes SOLID :
 | **LSP** | Tous les repositories sont interchangeables via leurs interfaces |
 | **ISP** | `IReadOnlyRepository` vs `IBaseRepository`, interfaces spécifiques par feature |
 | **DIP** | Injection de dépendances partout, aucune dépendance concrète dans Application/Core |
+
+---
+
+## 🤝 Contribution
+
+Ce projet est un template. Pour contribuer au template lui-même :
+
+1. Fork le repository
+2. Créer une branche feature (`git checkout -b feature/AmazingFeature`)
+3. Commit vos changements (`git commit -m 'Add some AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrir une Pull Request
+
+---
+
+## 📄 Licence
+
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+
+---
+
+## 🔗 Ressources
+
+- [Clean Architecture - Robert C. Martin](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [FastEndpoints Documentation](https://fast-endpoints.com/)
+- [MediatR Documentation](https://github.com/jbogard/MediatR)
+- [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
+- [FluentValidation](https://docs.fluentvalidation.net/)
+
+---
+
+**Généré avec le template Miccore Clean Architecture** 🚀
