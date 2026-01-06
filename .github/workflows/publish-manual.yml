@@ -74,20 +74,20 @@ jobs:
         echo "📝 Mise à jour de la version dans le fichier .nuspec..."
 
         # Sauvegarder l'original
-        cp Miccore.CleanArchitecture.Template.nuspec Miccore.CleanArchitecture.Template.nuspec.backup
+        cp .template.config/Miccore.CleanArchitecture.Template.nuspec .template.config/Miccore.CleanArchitecture.Template.nuspec.backup
 
         # Mettre à jour la version
-        sed -i "s|<version>.*</version>|<version>$VERSION</version>|" Miccore.CleanArchitecture.Template.nuspec
+        sed -i "s|<version>.*</version>|<version>$VERSION</version>|" .template.config/Miccore.CleanArchitecture.Template.nuspec
 
         echo "✅ Version mise à jour dans le fichier nuspec"
         echo ""
         echo "Différence:"
-        diff Miccore.CleanArchitecture.Template.nuspec.backup Miccore.CleanArchitecture.Template.nuspec || true
+        diff .template.config/Miccore.CleanArchitecture.Template.nuspec.backup .template.config/Miccore.CleanArchitecture.Template.nuspec || true
 
         # Afficher la section version
         echo ""
         echo "Version dans le .nuspec:"
-        cat Miccore.CleanArchitecture.Template.nuspec | grep -A1 -B1 "<version>"
+        cat .template.config/Miccore.CleanArchitecture.Template.nuspec | grep -A1 -B1 "<version>"
 
     - name: Validate template
       if: github.event.inputs.skip-validation == 'false'
@@ -149,7 +149,7 @@ jobs:
         VERSION="${{ github.event.inputs.version }}"
         echo "📦 Création du package NuGet version $VERSION..."
 
-        nuget pack Miccore.CleanArchitecture.Template.nuspec
+        nuget pack .template.config/Miccore.CleanArchitecture.Template.nuspec
 
         # Vérifier que le package a été créé
         PACKAGE_FILE="Miccore.CleanArchitecture.Template.$VERSION.nupkg"
