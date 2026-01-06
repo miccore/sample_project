@@ -21,10 +21,16 @@ public class SampleApplicationDbContext(DbContextOptions<SampleApplicationDbCont
         if (string.IsNullOrEmpty(dbConfig.Server))
             throw new InvalidOperationException($"Configuration section '{DatabaseConfiguration.SectionName}' is missing or invalid.");
 
-        // Configure DbContext to use MySQL with Pomelo provider
-        // ServerVersion.AutoDetect will automatically detect the MySQL/MariaDB version
+        // Configure DbContext to use database provider
+        // The provider is selected based on template parameter during project generation
         var connectionString = dbConfig.GetConnectionString();
         optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+//#if (usePostgreSql)
+//        optionsBuilder.UseNpgsql(connectionString);
+//#endif
+//#if (useSqlServer)
+//        optionsBuilder.UseSqlServer(connectionString);
+//#endif
     }
 
     /// <summary>
