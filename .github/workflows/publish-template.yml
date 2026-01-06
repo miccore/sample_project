@@ -46,9 +46,9 @@ jobs:
     - name: Update version in nuspec
       run: |
         VERSION="${{ steps.get_version.outputs.version }}"
-        sed -i "s|<version>.*</version>|<version>$VERSION</version>|" Miccore.CleanArchitecture.Template.nuspec
+        sed -i "s|<version>.*</version>|<version>$VERSION</version>|" .template.config/Miccore.CleanArchitecture.Template.nuspec
         echo "✅ Version mise à jour dans le fichier nuspec"
-        cat Miccore.CleanArchitecture.Template.nuspec | grep -A1 -B1 "<version>"
+        cat .template.config/Miccore.CleanArchitecture.Template.nuspec | grep -A1 -B1 "<version>"
 
     - name: Validate template
       run: |
@@ -84,7 +84,7 @@ jobs:
     - name: Create NuGet package
       run: |
         echo "📦 Création du package NuGet..."
-        nuget pack Miccore.CleanArchitecture.Template.nuspec
+        nuget pack .template.config/Miccore.CleanArchitecture.Template.nuspec
 
         # Vérifier que le package a été créé
         PACKAGE_FILE="Miccore.CleanArchitecture.Template.${{ steps.get_version.outputs.version }}.nupkg"
