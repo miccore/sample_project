@@ -8,7 +8,7 @@
     "Microservice",
     "CQRS"
   ],
-  "identity": "Miccore.CleanArchitecture.Template",
+  "identity": "Miccore.Net.CleanArchitectureTemplate",
   "name": "Miccore Clean Architecture Microservice",
   "shortName": "miccore-clean",
   "tags": {
@@ -38,18 +38,6 @@
       "defaultValue": "MySQL",
       "description": "Database provider to use"
     },
-    "includeTests": {
-      "type": "parameter",
-      "datatype": "bool",
-      "defaultValue": "true",
-      "description": "Include test projects in the solution"
-    },
-    "includeDocker": {
-      "type": "parameter",
-      "datatype": "bool",
-      "defaultValue": "true",
-      "description": "Include Dockerfile and .dockerignore"
-    },
     "useMySql": {
       "type": "computed",
       "value": "(databaseProvider == \"MySQL\")"
@@ -71,7 +59,7 @@
       "replaces": "MICCORE_NET_PRESERVE"
     },
     "MiccoreSharedKernelPackage": {
-      "type": "generated", 
+      "type": "generated",
       "generator": "constant",
       "parameters": {
         "value": "Miccore.SharedKernel"
@@ -82,19 +70,6 @@
   "sources": [
     {
       "modifiers": [
-        {
-          "condition": "(!includeTests)",
-          "exclude": [
-            "test/**/*"
-          ]
-        },
-        {
-          "condition": "(!includeDocker)",
-          "exclude": [
-            "Dockerfile",
-            ".dockerignore"
-          ]
-        },
         {
           "exclude": [
             ".github/**/*",

@@ -46,9 +46,9 @@ jobs:
     - name: Update version in nuspec
       run: |
         VERSION="${{ steps.get_version.outputs.version }}"
-        sed -i "s|<version>.*</version>|<version>$VERSION</version>|" .template.config/Miccore.CleanArchitecture.Template.nuspec
+        sed -i "s|<version>.*</version>|<version>$VERSION</version>|" .template.config/Miccore.Net.CleanArchitectureTemplate.nuspec
         echo "✅ Version mise à jour dans le fichier nuspec"
-        cat .template.config/Miccore.CleanArchitecture.Template.nuspec | grep -A1 -B1 "<version>"
+        cat .template.config/Miccore.Net.CleanArchitectureTemplate.nuspec | grep -A1 -B1 "<version>"
 
     - name: Validate template
       run: |
@@ -69,13 +69,6 @@ jobs:
         cd Test.Postgres.Project
         dotnet build --configuration Release
 
-        echo "🧪 Test de génération sans tests..."
-        mkdir -p /tmp/test-notests
-        cd /tmp/test-notests
-        dotnet new miccore-clean -n Test.NoTests.Project --includeTests false
-        cd Test.NoTests.Project
-        dotnet build --configuration Release
-
         echo "✅ Tous les tests de validation ont réussi"
 
         # Désinstaller le template après validation
@@ -84,10 +77,10 @@ jobs:
     - name: Create NuGet package
       run: |
         echo "📦 Création du package NuGet..."
-        nuget pack .template.config/Miccore.CleanArchitecture.Template.nuspec
+        nuget pack .template.config/Miccore.Net.CleanArchitectureTemplate.nuspec
 
         # Vérifier que le package a été créé
-        PACKAGE_FILE="Miccore.CleanArchitecture.Template.${{ steps.get_version.outputs.version }}.nupkg"
+        PACKAGE_FILE="Miccore.Net.CleanArchitectureTemplate.${{ steps.get_version.outputs.version }}.nupkg"
         if [ -f "$PACKAGE_FILE" ]; then
           echo "✅ Package créé avec succès: $PACKAGE_FILE"
           ls -lh "$PACKAGE_FILE"
@@ -106,7 +99,7 @@ jobs:
           exit 1
         fi
 
-        PACKAGE_FILE="Miccore.CleanArchitecture.Template.${{ steps.get_version.outputs.version }}.nupkg"
+        PACKAGE_FILE="Miccore.Net.CleanArchitectureTemplate.${{ steps.get_version.outputs.version }}.nupkg"
 
         echo "🚀 Publication du package sur NuGet.org..."
         dotnet nuget push "$PACKAGE_FILE" \
@@ -115,15 +108,15 @@ jobs:
           --skip-duplicate
 
         echo "✅ Package publié avec succès sur NuGet.org!"
-        echo "📦 Package: Miccore.CleanArchitecture.Template"
+        echo "📦 Package: Miccore.Net.CleanArchitectureTemplate"
         echo "🔢 Version: ${{ steps.get_version.outputs.version }}"
-        echo "🔗 URL: https://www.nuget.org/packages/Miccore.CleanArchitecture.Template/${{ steps.get_version.outputs.version }}"
+        echo "🔗 URL: https://www.nuget.org/packages/Miccore.Net.CleanArchitectureTemplate/${{ steps.get_version.outputs.version }}"
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: Miccore.CleanArchitecture.Template.${{ steps.get_version.outputs.version }}.nupkg
+        files: Miccore.Net.CleanArchitectureTemplate.${{ steps.get_version.outputs.version }}.nupkg
         generate_release_notes: true
         body: |
           ## 📦 Template NuGet Published
@@ -133,7 +126,7 @@ jobs:
           ### Installation
 
           ```bash
-          dotnet new install Miccore.CleanArchitecture.Template
+          dotnet new install Miccore.Net.CleanArchitectureTemplate
           ```
 
           ### Usage
@@ -144,14 +137,11 @@ jobs:
 
           # Avec PostgreSQL
           dotnet new miccore-clean -n YourProject --databaseProvider PostgreSQL
-
-          # Sans tests
-          dotnet new miccore-clean -n YourProject --includeTests false
           ```
 
           ### NuGet Package
 
-          🔗 [View on NuGet.org](https://www.nuget.org/packages/Miccore.CleanArchitecture.Template/${{ steps.get_version.outputs.version }})
+          🔗 [View on NuGet.org](https://www.nuget.org/packages/Miccore.Net.CleanArchitectureTemplate/${{ steps.get_version.outputs.version }})
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -159,5 +149,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: nuget-package-${{ steps.get_version.outputs.version }}
-        path: Miccore.CleanArchitecture.Template.${{ steps.get_version.outputs.version }}.nupkg
+        path: Miccore.Net.CleanArchitectureTemplate.${{ steps.get_version.outputs.version }}.nupkg
         retention-days: 90
