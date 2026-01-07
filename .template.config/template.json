@@ -8,7 +8,7 @@
     "Microservice",
     "CQRS"
   ],
-  "identity": "Miccore.CleanArchitecture.Template",
+  "identity": "Miccore.Net.CleanArchitectureTemplate",
   "name": "Miccore Clean Architecture Microservice",
   "shortName": "miccore-clean",
   "tags": {
@@ -17,19 +17,6 @@
   },
   "sourceName": "Miccore.Clean.Sample",
   "preferNameDirectory": true,
-  "sources": [
-    {
-      "exclude": [
-        ".template-package/**",
-        "**/[Bb]in/**",
-        "**/[Oo]bj/**",
-        ".template.config/**/*",
-        "**/*.filelist",
-        "**/*.user",
-        "**/*.lock.json"
-      ]
-    }
-  ],
   "symbols": {
     "databaseProvider": {
       "type": "parameter",
@@ -51,18 +38,6 @@
       "defaultValue": "MySQL",
       "description": "Database provider to use"
     },
-    "includeTests": {
-      "type": "parameter",
-      "datatype": "bool",
-      "defaultValue": "true",
-      "description": "Include test projects in the solution"
-    },
-    "includeDocker": {
-      "type": "parameter",
-      "datatype": "bool",
-      "defaultValue": "true",
-      "description": "Include Dockerfile and .dockerignore"
-    },
     "useMySql": {
       "type": "computed",
       "value": "(databaseProvider == \"MySQL\")"
@@ -74,24 +49,27 @@
     "useSqlServer": {
       "type": "computed",
       "value": "(databaseProvider == \"SqlServer\")"
+    },
+    "MiccoreNetPackage": {
+      "type": "generated",
+      "generator": "constant",
+      "parameters": {
+        "value": "Miccore.Net"
+      },
+      "replaces": "MICCORE_NET_PRESERVE"
+    },
+    "MiccoreSharedKernelPackage": {
+      "type": "generated",
+      "generator": "constant",
+      "parameters": {
+        "value": "Miccore.SharedKernel"
+      },
+      "replaces": "MICCORE_SHAREDKERNEL_PRESERVE"
     }
   },
   "sources": [
     {
       "modifiers": [
-        {
-          "condition": "(!includeTests)",
-          "exclude": [
-            "test/**/*"
-          ]
-        },
-        {
-          "condition": "(!includeDocker)",
-          "exclude": [
-            "Dockerfile",
-            ".dockerignore"
-          ]
-        },
         {
           "exclude": [
             ".github/**/*",
@@ -121,14 +99,6 @@
     "BDCB354C-49DE-41E2-A46E-CBBA7F4CE718",
     "BA1F5DB3-27CC-4E8D-A310-635EF87E4029"
   ],
-  "forms": {
-    "identity": {
-      "exclude": [
-        "Miccore\\.Net\\..*",
-        "Miccore\\.SharedKernel\\..*"
-      ]
-    }
-  },
   "primaryOutputs": [
     {
       "path": "Miccore.Clean.Sample.sln"

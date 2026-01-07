@@ -129,7 +129,7 @@ Vous devez ajouter votre clé API NuGet dans les secrets GitHub :
    - Aller dans Account Settings > API Keys
    - Créer une nouvelle clé API avec les permissions :
      - Push new packages and package versions
-     - Sélectionner "All Packages" ou spécifier `Miccore.CleanArchitecture.Template`
+     - Sélectionner "All Packages" ou spécifier `Miccore.Net.CleanArchitectureTemplate`
 
 2. **Ajouter le secret dans GitHub** :
    - Aller dans votre repository GitHub
@@ -183,8 +183,8 @@ Exemples :
 Après exécution réussie :
 
 1. **Package NuGet** :
-   - Publié sur https://www.nuget.org/packages/Miccore.CleanArchitecture.Template/
-   - Disponible via `dotnet new install Miccore.CleanArchitecture.Template`
+   - Publié sur https://www.nuget.org/packages/Miccore.Net.CleanArchitectureTemplate/
+   - Disponible via `dotnet new install Miccore.Net.CleanArchitectureTemplate`
 
 2. **GitHub Release** (si déclenché par tag) :
    - Création automatique d'une release
@@ -229,7 +229,7 @@ Pour surveiller les publications :
    - Voir l'historique et les logs détaillés
 
 2. **NuGet.org** :
-   - https://www.nuget.org/packages/Miccore.CleanArchitecture.Template/
+   - https://www.nuget.org/packages/Miccore.Net.CleanArchitectureTemplate/
    - Voir les statistiques de téléchargement
 
 3. **GitHub Releases** :

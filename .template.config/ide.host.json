@@ -8,20 +8,6 @@
         "text": "Database Provider"
       },
       "isVisible": true
-    },
-    {
-      "id": "includeTests",
-      "name": {
-        "text": "Include Test Projects"
-      },
-      "isVisible": true
-    },
-    {
-      "id": "includeDocker",
-      "name": {
-        "text": "Include Docker Support"
-      },
-      "isVisible": true
     }
   ]
 }

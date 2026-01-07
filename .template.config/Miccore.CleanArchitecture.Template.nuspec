@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
-    <id>Miccore.CleanArchitecture.Template</id>
+    <id>Miccore.Net.CleanArchitectureTemplate</id>
     <version>1.0.0</version>
     <description>
       A production-ready Clean Architecture template for .NET microservices implementing CQRS, MediatR, FastEndpoints, and Entity Framework Core.

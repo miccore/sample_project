@@ -18,7 +18,7 @@ Si vous souhaitez créer de nouveaux projets à partir de ce template :
 
 ```bash
 # Installer le template depuis NuGet
-dotnet new install Miccore.CleanArchitecture.Template
+dotnet new install Miccore.Net.CleanArchitectureTemplate
 
 # Créer un nouveau projet (nom simple)
 dotnet new miccore-clean -n MonProjet
@@ -29,12 +29,6 @@ dotnet new miccore-clean -n Acme.Ecommerce.Catalog
 # Avec PostgreSQL au lieu de MySQL
 dotnet new miccore-clean -n MonProjet --databaseProvider PostgreSQL
 
-# Sans les projets de tests
-dotnet new miccore-clean -n MonProjet --includeTests false
-
-# Sans le support Docker
-dotnet new miccore-clean -n MonProjet --includeDocker false
-
 # Voir tous les paramètres disponibles
 dotnet new miccore-clean --help
 ```
@@ -44,8 +38,6 @@ dotnet new miccore-clean --help
 | Paramètre | Type | Valeur par défaut | Description |
 |-----------|------|-------------------|-------------|
 | `--databaseProvider` | choice | MySQL | Fournisseur de base de données : `MySQL`, `PostgreSQL`, ou `SqlServer` |
-| `--includeTests` | bool | true | Inclure les projets de tests dans la solution |
-| `--includeDocker` | bool | true | Inclure le Dockerfile et .dockerignore |
 
 ### Recommandations de Nommage
 
@@ -253,7 +245,6 @@ Prenons l'exemple d'une création (`CreateSample`) :
 
 ---
 
-<!--#if (includeTests)-->
 ## 🧪 Tests
 
 Le projet inclut une suite de tests complète :
@@ -381,7 +372,6 @@ En mode **Development**, Swagger est accessible via :
 - URL : `https://localhost:5001/swagger`
 - Documentation interactive de tous les endpoints disponibles
 
-<!--#if (includeDocker)-->
 ### Démarrage avec Docker
 
 ```bash
@@ -391,7 +381,6 @@ docker build -t miccore-clean-sample .
 # Lancer le conteneur
 docker run -p 8080:8080 miccore-clean-sample
 ```
-<!--#endif-->
 
 ---
 
