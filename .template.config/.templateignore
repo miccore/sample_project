@@ -6,4 +6,3 @@ logs/
 *.user
 .git/
 .github/
-.template-package/
