@@ -36,11 +36,6 @@ jobs:
       with:
         dotnet-version: '10.0.x'
 
-    - name: Setup NuGet
-      uses: nuget/setup-nuget@v2
-      with:
-        nuget-version: 'latest'
-
     - name: Validate version format
       run: |
         VERSION="${{ github.event.inputs.version }}"
@@ -138,7 +133,7 @@ jobs:
         VERSION="${{ github.event.inputs.version }}"
         echo "📦 Création du package NuGet version $VERSION..."
 
-        nuget pack .template.config/Miccore.Net.CleanArchitectureTemplate.nuspec
+        dotnet pack -p:NuspecFile=.template.config/Miccore.Net.CleanArchitectureTemplate.nuspec -p:PackageVersion=$VERSION
 
         # Vérifier que le package a été créé
         PACKAGE_FILE="Miccore.Net.CleanArchitectureTemplate.$VERSION.nupkg"
