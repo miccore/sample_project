@@ -6,3 +6,4 @@ logs/
 *.user
 .git/
 .github/
+artifacts/
