@@ -72,10 +72,12 @@ jobs:
     - name: Create NuGet package
       run: |
         echo "📦 Création du package NuGet..."
-        dotnet pack -p:NuspecFile=.template.config/Miccore.Net.CleanArchitectureTemplate.nuspec -p:PackageVersion=${{ steps.get_version.outputs.version }}
+        cd .template.config
+        dotnet pack Template.csproj -p:PackageVersion=${{ steps.get_version.outputs.version }} -o ../artifacts
+        cd ..
 
         # Vérifier que le package a été créé
-        PACKAGE_FILE="Miccore.Net.CleanArchitectureTemplate.${{ steps.get_version.outputs.version }}.nupkg"
+        PACKAGE_FILE="artifacts/Miccore.Net.CleanArchitectureTemplate.${{ steps.get_version.outputs.version }}.nupkg"
         if [ -f "$PACKAGE_FILE" ]; then
           echo "✅ Package créé avec succès: $PACKAGE_FILE"
           ls -lh "$PACKAGE_FILE"
@@ -94,7 +96,7 @@ jobs:
           exit 1
         fi
 
-        PACKAGE_FILE="Miccore.Net.CleanArchitectureTemplate.${{ steps.get_version.outputs.version }}.nupkg"
+        PACKAGE_FILE="artifacts/Miccore.Net.CleanArchitectureTemplate.${{ steps.get_version.outputs.version }}.nupkg"
 
         echo "🚀 Publication du package sur NuGet.org..."
         dotnet nuget push "$PACKAGE_FILE" \
@@ -111,7 +113,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: Miccore.Net.CleanArchitectureTemplate.${{ steps.get_version.outputs.version }}.nupkg
+        files: artifacts/Miccore.Net.CleanArchitectureTemplate.${{ steps.get_version.outputs.version }}.nupkg
         generate_release_notes: true
         body: |
           ## 📦 Template NuGet Published
@@ -144,5 +146,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: nuget-package-${{ steps.get_version.outputs.version }}
-        path: Miccore.Net.CleanArchitectureTemplate.${{ steps.get_version.outputs.version }}.nupkg
+        path: artifacts/Miccore.Net.CleanArchitectureTemplate.${{ steps.get_version.outputs.version }}.nupkg
         retention-days: 90

@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>true</IsPackable>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <NuspecFile>Miccore.Net.CleanArchitectureTemplate.nuspec</NuspecFile>
+    <NuspecBasePath>$(MSBuildProjectDirectory)\..</NuspecBasePath>
+  </PropertyGroup>
+</Project>
