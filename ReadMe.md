@@ -104,7 +104,7 @@ Miccore.Clean.Sample/
 │       ├── Caching/
 │       │   ├── MemoryCacheService.cs
 │       │   └── CachedRepositoryDecorator.cs    # Decorator Pattern
-│       ├── Persistances/
+│       ├── Persistence/
 │       │   ├── SampleApplicationDbContext.cs
 │       │   └── UnitOfWork.cs
 │       └── Repositories/
@@ -167,7 +167,7 @@ Cette couche orchestre la logique métier. Elle dépend de `Core`.
 
 ### 3. Infrastructure
 Cette couche implémente les interfaces définies dans `Core`. Elle dépend de `Core`.
--   **Persistance** : Entity Framework Core avec `SampleApplicationDbContext`.
+-   **Persistence** : Entity Framework Core avec `SampleApplicationDbContext`.
 -   **Unit of Work** : `UnitOfWork` gère les transactions et expose `SaveChangesAsync`.
 -   **Repositories** :
     -   `BaseRepository<T>` : Implémentation générique CRUD (implémente `IBaseRepository<T>`).
@@ -275,7 +275,7 @@ Objectif de couverture : **> 70%**
 ## 📚 Documentation Complémentaire
 
 - **[Architecture détaillée](docs/architecture.md)** - Vue approfondie de l'architecture (si applicable)
-- **[Configuration de la base de données](src/Miccore.Clean.Sample.Infrastructure/Persistances/DatabaseProviderConfiguration.md)** - Guide complet des providers supportés
+- **[Configuration de la base de données](src/Miccore.Clean.Sample.Infrastructure/Persistence/DatabaseProviderConfiguration.md)** - Guide complet des providers supportés
 - **[Patterns utilisés](#-patterns-clés)** - Voir ci-dessous
 
 ---
@@ -349,7 +349,7 @@ dotnet ef migrations add InitialCreate --project src/Miccore.Clean.Sample.Infras
 dotnet ef database update --project src/Miccore.Clean.Sample.Infrastructure --startup-project src/Miccore.Clean.Sample.Api
 ```
 
-> 💡 **Note** : Consultez [DatabaseProviderConfiguration.md](src/Miccore.Clean.Sample.Infrastructure/Persistances/DatabaseProviderConfiguration.md) pour des exemples détaillés de configuration selon votre fournisseur de base de données, y compris les différences de comportement et les meilleures pratiques.
+> 💡 **Note** : Consultez [DatabaseProviderConfiguration.md](src/Miccore.Clean.Sample.Infrastructure/Persistence/DatabaseProviderConfiguration.md) pour des exemples détaillés de configuration selon votre fournisseur de base de données, y compris les différences de comportement et les meilleures pratiques.
 
 ### Lancement de l'Application
 

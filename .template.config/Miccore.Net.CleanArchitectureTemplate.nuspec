@@ -11,6 +11,7 @@
     <owners>Miccore</owners>
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/miccore/sample_project</projectUrl>
+    <readme>ReadMe.md</readme>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <releaseNotes>Initial release of Miccore Clean Architecture Template</releaseNotes>
     <copyright>Copyright 2026 Miccore</copyright>
@@ -22,5 +23,6 @@
   <files>
     <file src="**\*" target="content" exclude="**\bin\**;**\obj\**;**\.vs\**;**\.vscode\**;**\logs\**;**\.git\**;**\*.user;**\.github\**;.template.config\**\*" />
     <file src=".template.config\**\*" target="content\.template.config" />
+    <file src="ReadMe.md" target="" />
   </files>
 </package>
