@@ -36,6 +36,11 @@ jobs:
       with:
         dotnet-version: '10.0.x'
 
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v2
+      with:
+        nuget-version: 'latest'
+
     - name: Validate version format
       run: |
         VERSION="${{ github.event.inputs.version }}"
@@ -133,12 +138,10 @@ jobs:
         VERSION="${{ github.event.inputs.version }}"
         echo "📦 Création du package NuGet version $VERSION..."
 
-        cd .template.config
-        dotnet pack Template.csproj -p:PackageVersion=$VERSION -o ../artifacts
-        cd ..
+        nuget pack .template.config/Miccore.Net.CleanArchitectureTemplate.nuspec
 
         # Vérifier que le package a été créé
-        PACKAGE_FILE="artifacts/Miccore.Net.CleanArchitectureTemplate.$VERSION.nupkg"
+        PACKAGE_FILE="Miccore.Net.CleanArchitectureTemplate.$VERSION.nupkg"
         if [ -f "$PACKAGE_FILE" ]; then
           echo "✅ Package créé avec succès!"
           echo ""
@@ -150,7 +153,7 @@ jobs:
         else
           echo "❌ Erreur: Le package n'a pas été créé"
           echo "Fichiers disponibles:"
-          ls -la artifacts/*.nupkg || echo "Aucun fichier .nupkg trouvé"
+          ls -la *.nupkg || echo "Aucun fichier .nupkg trouvé"
           exit 1
         fi
 
@@ -159,7 +162,7 @@ jobs:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
       run: |
         VERSION="${{ github.event.inputs.version }}"
-        PACKAGE_FILE="artifacts/Miccore.Net.CleanArchitectureTemplate.$VERSION.nupkg"
+        PACKAGE_FILE="Miccore.Net.CleanArchitectureTemplate.$VERSION.nupkg"
 
         if [ -z "$NUGET_API_KEY" ]; then
           echo "❌ Erreur: NUGET_API_KEY n'est pas défini dans les secrets GitHub"
@@ -210,7 +213,7 @@ jobs:
         name: Release v${{ github.event.inputs.version }}
         draft: false
         prerelease: ${{ contains(github.event.inputs.version, '-') }}
-        files: artifacts/Miccore.Net.CleanArchitectureTemplate.${{ github.event.inputs.version }}.nupkg
+        files: Miccore.Net.CleanArchitectureTemplate.${{ github.event.inputs.version }}.nupkg
         body: |
           ## 📦 Template NuGet - Publication Manuelle
 
@@ -264,7 +267,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: nuget-package-${{ github.event.inputs.version }}-manual
-        path: artifacts/Miccore.Net.CleanArchitectureTemplate.${{ github.event.inputs.version }}.nupkg
+        path: Miccore.Net.CleanArchitectureTemplate.${{ github.event.inputs.version }}.nupkg
         retention-days: 90
 
     - name: Summary

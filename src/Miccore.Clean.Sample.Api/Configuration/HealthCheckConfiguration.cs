@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Miccore.Clean.Sample.Infrastructure.Persistance;
+using Miccore.Clean.Sample.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 

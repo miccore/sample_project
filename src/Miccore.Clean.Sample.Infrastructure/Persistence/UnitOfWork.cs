@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Miccore.Clean.Sample.Infrastructure.Persistance;
+namespace Miccore.Clean.Sample.Infrastructure.Persistence;
 
 /// <summary>
 /// Unit of Work implementation for managing database transactions.

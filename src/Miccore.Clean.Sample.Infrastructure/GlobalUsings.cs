@@ -16,7 +16,7 @@ global using Miccore.Clean.Sample.Core.Interfaces;
 global using Miccore.Clean.Sample.Core.Repositories;
 global using Miccore.Clean.Sample.Core.Repositories.Base;
 // Project namespaces - Infrastructure
-global using Miccore.Clean.Sample.Infrastructure.Persistance;
+global using Miccore.Clean.Sample.Infrastructure.Persistence;
 global using Miccore.Clean.Sample.Infrastructure.Repositories;
 global using Miccore.Clean.Sample.Infrastructure.Repositories.Base;
 // External packages
