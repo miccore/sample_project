@@ -42,6 +42,15 @@ jobs:
         fi
         echo "✅ Version format valid: $VERSION"
 
+    - name: Update .nuspec version
+      run: |
+        VERSION="${{ steps.get_version.outputs.version }}"
+        NUSPEC_FILE=".template.config/Miccore.Net.CleanArchitectureTemplate.nuspec"
+        echo "📝 Updating .nuspec version to $VERSION..."
+        sed -i "s|<version>.*</version>|<version>$VERSION</version>|" "$NUSPEC_FILE"
+        echo "✅ .nuspec updated:"
+        grep "<version>" "$NUSPEC_FILE"
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
