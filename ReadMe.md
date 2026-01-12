@@ -1,13 +1,13 @@
 # Miccore.Clean.Sample
 
 <!--#if (useMySql)-->
-> 🚀 Clean Architecture microservice template with **MySQL** database provider
+> 🚀 Template de microservice Clean Architecture avec fournisseur de base de données **MySQL**
 <!--#endif-->
 <!--#if (usePostgreSql)-->
-> 🚀 Clean Architecture microservice template with **PostgreSQL** database provider
+> 🚀 Template de microservice Clean Architecture avec fournisseur de base de données **PostgreSQL**
 <!--#endif-->
 <!--#if (useSqlServer)-->
-> 🚀 Clean Architecture microservice template with **SQL Server** database provider
+> 🚀 Template de microservice Clean Architecture avec fournisseur de base de données **SQL Server**
 <!--#endif-->
 
 Ce projet est basé sur le template **Miccore Clean Architecture** qui implémente les meilleures pratiques d'architecture logicielle pour les microservices .NET.

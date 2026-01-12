@@ -1,30 +1,24 @@
-name: Publish NuGet Template
+name: NuGet Publish (Tag)
 
 on:
   push:
     tags:
-      - 'v*.*.*'  # Déclenche sur les tags version (ex: v1.0.0, v1.2.3)
-  workflow_dispatch:  # Permet le déclenchement manuel
-    inputs:
-      version:
-        description: 'Version du package (ex: 1.0.0)'
-        required: true
-        default: '1.0.0'
+      - 'v*.*.*'
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+  NUGET_SOURCE: https://api.nuget.org/v3/index.json
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Récupère tout l'historique pour les tags
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '10.0.x'
+        fetch-depth: 0
 
     - name: Setup NuGet
       uses: nuget/setup-nuget@v2
@@ -34,89 +28,64 @@ jobs:
     - name: Extract version from tag
       id: get_version
       run: |
-        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-          VERSION="${{ github.event.inputs.version }}"
-        else
-          # Extrait la version du tag (ex: v1.0.0 -> 1.0.0)
-          VERSION=${GITHUB_REF#refs/tags/v}
-        fi
+        VERSION=${GITHUB_REF#refs/tags/v}
         echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo "📦 Version du package: $VERSION"
+        echo "📦 Version: $VERSION"
 
-    - name: Update version in nuspec
+    - name: Validate version format
       run: |
         VERSION="${{ steps.get_version.outputs.version }}"
-        sed -i "s|<version>.*</version>|<version>$VERSION</version>|" .template.config/Miccore.Net.CleanArchitectureTemplate.nuspec
-        echo "✅ Version mise à jour dans le fichier nuspec"
-        cat .template.config/Miccore.Net.CleanArchitectureTemplate.nuspec | grep -A1 -B1 "<version>"
+        if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+)?$ ]]; then
+          echo "❌ Invalid version format: $VERSION"
+          echo "Expected format: X.Y.Z or X.Y.Z-suffix (ex: 1.0.0, 1.2.3-preview)"
+          exit 1
+        fi
+        echo "✅ Version format valid: $VERSION"
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
 
     - name: Validate template
       run: |
-        echo "🔍 Installation du template pour validation..."
+        echo "🔍 Installing template for validation..."
         dotnet new install .
 
-        echo "🧪 Test de génération avec MySQL..."
-        mkdir -p /tmp/test-mysql
-        cd /tmp/test-mysql
+        echo "🧪 Test: MySQL (default)..."
+        mkdir -p /tmp/test-mysql && cd /tmp/test-mysql
         dotnet new miccore-clean -n Test.MySQL.Project
-        cd Test.MySQL.Project
-        dotnet build --configuration Release
+        cd Test.MySQL.Project && dotnet build -c Release --nologo -v q
 
-        echo "🧪 Test de génération avec PostgreSQL..."
-        mkdir -p /tmp/test-postgres
-        cd /tmp/test-postgres
+        echo "🧪 Test: PostgreSQL..."
+        mkdir -p /tmp/test-postgres && cd /tmp/test-postgres
         dotnet new miccore-clean -n Test.Postgres.Project --databaseProvider PostgreSQL
-        cd Test.Postgres.Project
-        dotnet build --configuration Release
+        cd Test.Postgres.Project && dotnet build -c Release --nologo -v q
 
-        echo "✅ Tous les tests de validation ont réussi"
-
-        # Désinstaller le template après validation
+        echo "✅ All validation tests passed"
         dotnet new uninstall "$GITHUB_WORKSPACE"
 
-    - name: Create NuGet package
+    - name: Pack template
       run: |
-        echo "📦 Création du package NuGet..."
-        nuget pack .template.config/Miccore.Net.CleanArchitectureTemplate.nuspec
+        dotnet pack .template.config/Template.csproj \
+          -c Release \
+          -o ./artifacts \
+          /p:Version=${{ steps.get_version.outputs.version }}
 
-        # Vérifier que le package a été créé
-        PACKAGE_FILE="Miccore.Net.CleanArchitectureTemplate.${{ steps.get_version.outputs.version }}.nupkg"
-        if [ -f "$PACKAGE_FILE" ]; then
-          echo "✅ Package créé avec succès: $PACKAGE_FILE"
-          ls -lh "$PACKAGE_FILE"
-        else
-          echo "❌ Erreur: Le package n'a pas été créé"
-          exit 1
-        fi
+    - name: List artifacts
+      run: ls -la ./artifacts/
 
-    - name: Publish to NuGet.org
-      env:
-        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+    - name: Push to NuGet.org
       run: |
-        if [ -z "$NUGET_API_KEY" ]; then
-          echo "❌ Erreur: NUGET_API_KEY n'est pas défini dans les secrets GitHub"
-          echo "ℹ️  Ajoutez votre clé API NuGet dans Settings > Secrets and variables > Actions"
-          exit 1
-        fi
-
-        PACKAGE_FILE="Miccore.Net.CleanArchitectureTemplate.${{ steps.get_version.outputs.version }}.nupkg"
-
-        echo "🚀 Publication du package sur NuGet.org..."
-        dotnet nuget push "$PACKAGE_FILE" \
-          --api-key "$NUGET_API_KEY" \
-          --source https://api.nuget.org/v3/index.json \
+        dotnet nuget push ./artifacts/*.nupkg \
+          --api-key ${{ secrets.NUGET_API_KEY }} \
+          --source ${{ env.NUGET_SOURCE }} \
           --skip-duplicate
-
-        echo "✅ Package publié avec succès sur NuGet.org!"
-        echo "📦 Package: Miccore.Net.CleanArchitectureTemplate"
-        echo "🔢 Version: ${{ steps.get_version.outputs.version }}"
-        echo "🔗 URL: https://www.nuget.org/packages/Miccore.Net.CleanArchitectureTemplate/${{ steps.get_version.outputs.version }}"
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: Miccore.Net.CleanArchitectureTemplate.${{ steps.get_version.outputs.version }}.nupkg
+        files: ./artifacts/*.nupkg
         generate_release_notes: true
         body: |
           ## 📦 Template NuGet Published
@@ -126,28 +95,35 @@ jobs:
           ### Installation
 
           ```bash
-          dotnet new install Miccore.Net.CleanArchitectureTemplate
+          dotnet new install Miccore.Net.CleanArchitectureTemplate::${{ steps.get_version.outputs.version }}
           ```
 
           ### Usage
 
           ```bash
-          # Créer un nouveau projet
           dotnet new miccore-clean -n YourCompany.YourService
-
-          # Avec PostgreSQL
           dotnet new miccore-clean -n YourProject --databaseProvider PostgreSQL
           ```
-
-          ### NuGet Package
 
           🔗 [View on NuGet.org](https://www.nuget.org/packages/Miccore.Net.CleanArchitectureTemplate/${{ steps.get_version.outputs.version }})
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Upload package as artifact
+    - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: nuget-package-${{ steps.get_version.outputs.version }}
-        path: Miccore.Net.CleanArchitectureTemplate.${{ steps.get_version.outputs.version }}.nupkg
-        retention-days: 90
+        path: ./artifacts/*.nupkg
+        retention-days: 30
+
+    - name: Summary
+      run: |
+        echo "## 📦 Package Published" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "- **Version:** ${{ steps.get_version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **NuGet URL:** https://www.nuget.org/packages/Miccore.Net.CleanArchitectureTemplate/${{ steps.get_version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Installation" >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+        echo "dotnet new install Miccore.Net.CleanArchitectureTemplate::${{ steps.get_version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
