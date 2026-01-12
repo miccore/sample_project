@@ -20,6 +20,11 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v2
+      with:
+        nuget-version: 'latest'
+
     - name: Extract version from tag
       id: get_version
       run: |
