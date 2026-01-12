@@ -1,42 +1,42 @@
-# Database Provider Configuration Guide
+# Guide de Configuration des Fournisseurs de Base de Données
 
-This guide provides configuration examples for the three supported database providers in this Clean Architecture template.
+Ce guide fournit des exemples de configuration pour les trois fournisseurs de base de données pris en charge par ce template Clean Architecture.
 
-## Overview
+## Vue d'ensemble
 
-The template supports three database providers:
+Le template supporte trois fournisseurs de base de données :
 - **MySQL/MariaDB** (via Pomelo.EntityFrameworkCore.MySql)
 - **PostgreSQL** (via Npgsql.EntityFrameworkCore.PostgreSQL)
 - **SQL Server** (via Microsoft.EntityFrameworkCore.SqlServer)
 
-## Current Configuration
+## Configuration Actuelle
 
-The template has been generated with: **<!--#if (useMySql)-->MySQL<!--#endif--><!--#if (usePostgreSql)-->PostgreSQL<!--#endif--><!--#if (useSqlServer)-->SQL Server<!--#endif-->**
+Le template a été généré avec : **<!--#if (useMySql)-->MySQL<!--#endif--><!--#if (usePostgreSql)-->PostgreSQL<!--#endif--><!--#if (useSqlServer)-->SQL Server<!--#endif-->**
 
 ---
 
-## 1. MySQL/MariaDB Configuration
+## 1. Configuration MySQL/MariaDB
 
-### Package Reference
-```xml
+### Référence du Package
+\`\`\`xml
 <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
-```
+\`\`\`
 
-### Connection String (appsettings.json)
-```json
+### Chaîne de Connexion (appsettings.json)
+\`\`\`json
 {
   "DatabaseConfiguration": {
     "Server": "localhost",
     "Port": 3306,
-    "Database": "your_database_name",
-    "UserId": "your_username",
-    "Password": "your_password"
+    "Database": "nom_de_votre_base",
+    "UserId": "votre_utilisateur",
+    "Password": "votre_mot_de_passe"
   }
 }
-```
+\`\`\`
 
-### DbContext Configuration
-```csharp
+### Configuration du DbContext
+\`\`\`csharp
 protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 {
     var dbConfig = new DatabaseConfiguration();
@@ -45,49 +45,49 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     var connectionString = dbConfig.GetConnectionString();
     optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 }
-```
+\`\`\`
 
-### Migration Commands
-```bash
-# Create migration
-dotnet ef migrations add InitialCreate --project src/YourProject.Infrastructure --startup-project src/YourProject.Api
+### Commandes de Migration
+\`\`\`bash
+# Créer une migration
+dotnet ef migrations add InitialCreate --project src/VotreProjet.Infrastructure --startup-project src/VotreProjet.Api
 
-# Update database
-dotnet ef database update --project src/YourProject.Infrastructure --startup-project src/YourProject.Api
-```
+# Mettre à jour la base de données
+dotnet ef database update --project src/VotreProjet.Infrastructure --startup-project src/VotreProjet.Api
+\`\`\`
 
-### MySQL-Specific Considerations
-- **String Length**: Default max length is 255 characters in indexes
-- **GUID Storage**: Stored as CHAR(36) by default, use `.HasColumnType("binary(16)")` for better performance
-- **Case Sensitivity**: Table/column names are case-sensitive on Linux, case-insensitive on Windows
-- **JSON Support**: Native JSON type available (MySQL 5.7.8+)
-- **Performance**: Excellent for read-heavy workloads, good general performance
-- **Recommended For**: Web applications, microservices, high-read scenarios
+### Considérations Spécifiques à MySQL
+- **Longueur des chaînes** : Longueur maximale par défaut de 255 caractères dans les index
+- **Stockage GUID** : Stocké en CHAR(36) par défaut, utilisez \`.HasColumnType("binary(16)")\` pour de meilleures performances
+- **Sensibilité à la casse** : Les noms de tables/colonnes sont sensibles à la casse sous Linux, insensibles sous Windows
+- **Support JSON** : Type JSON natif disponible (MySQL 5.7.8+)
+- **Performance** : Excellent pour les charges de travail à forte lecture, bonne performance générale
+- **Recommandé pour** : Applications web, microservices, scénarios à forte lecture
 
 ---
 
-## 2. PostgreSQL Configuration
+## 2. Configuration PostgreSQL
 
-### Package Reference
-```xml
+### Référence du Package
+\`\`\`xml
 <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0" />
-```
+\`\`\`
 
-### Connection String (appsettings.json)
-```json
+### Chaîne de Connexion (appsettings.json)
+\`\`\`json
 {
   "DatabaseConfiguration": {
     "Server": "localhost",
     "Port": 5432,
-    "Database": "your_database_name",
-    "UserId": "your_username",
-    "Password": "your_password"
+    "Database": "nom_de_votre_base",
+    "UserId": "votre_utilisateur",
+    "Password": "votre_mot_de_passe"
   }
 }
-```
+\`\`\`
 
-### DbContext Configuration
-```csharp
+### Configuration du DbContext
+\`\`\`csharp
 protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 {
     var dbConfig = new DatabaseConfiguration();
@@ -96,29 +96,29 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     var connectionString = dbConfig.GetConnectionString();
     optionsBuilder.UseNpgsql(connectionString);
 }
-```
+\`\`\`
 
-### Migration Commands
-```bash
-# Create migration
-dotnet ef migrations add InitialCreate --project src/YourProject.Infrastructure --startup-project src/YourProject.Api
+### Commandes de Migration
+\`\`\`bash
+# Créer une migration
+dotnet ef migrations add InitialCreate --project src/VotreProjet.Infrastructure --startup-project src/VotreProjet.Api
 
-# Update database
-dotnet ef database update --project src/YourProject.Infrastructure --startup-project src/YourProject.Api
-```
+# Mettre à jour la base de données
+dotnet ef database update --project src/VotreProjet.Infrastructure --startup-project src/VotreProjet.Api
+\`\`\`
 
-### PostgreSQL-Specific Considerations
-- **String Length**: No practical limit on string length in indexes (use text type)
-- **GUID Storage**: Native UUID type with `.HasColumnType("uuid")` for optimal storage
-- **Case Sensitivity**: Identifiers are case-insensitive by default (converted to lowercase)
-- **JSON Support**: Excellent JSONB support with indexing and querying capabilities
-- **Performance**: Excellent for complex queries, write-heavy workloads, and ACID compliance
-- **Advanced Features**: Full-text search, arrays, hstore, custom types, window functions
-- **Recommended For**: Complex applications, data warehousing, analytics, geospatial data (PostGIS)
+### Considérations Spécifiques à PostgreSQL
+- **Longueur des chaînes** : Pas de limite pratique sur la longueur des chaînes dans les index (utilisez le type text)
+- **Stockage GUID** : Type UUID natif avec \`.HasColumnType("uuid")\` pour un stockage optimal
+- **Sensibilité à la casse** : Les identifiants sont insensibles à la casse par défaut (convertis en minuscules)
+- **Support JSON** : Excellent support JSONB avec indexation et capacités de requêtage
+- **Performance** : Excellent pour les requêtes complexes, les charges d'écriture intensives et la conformité ACID
+- **Fonctionnalités avancées** : Recherche plein texte, tableaux, hstore, types personnalisés, fonctions de fenêtrage
+- **Recommandé pour** : Applications complexes, entrepôts de données, analyses, données géospatiales (PostGIS)
 
-### PostgreSQL-Specific Entity Configuration Example
-```csharp
-modelBuilder.Entity<YourEntity>(entity =>
+### Exemple de Configuration d'Entité Spécifique à PostgreSQL
+\`\`\`csharp
+modelBuilder.Entity<VotreEntite>(entity =>
 {
     entity.Property(e => e.Id)
         .HasColumnType("uuid")
@@ -127,41 +127,41 @@ modelBuilder.Entity<YourEntity>(entity =>
     entity.Property(e => e.Data)
         .HasColumnType("jsonb");
 });
-```
+\`\`\`
 
 ---
 
-## 3. SQL Server Configuration
+## 3. Configuration SQL Server
 
-### Package Reference
-```xml
+### Référence du Package
+\`\`\`xml
 <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
-```
+\`\`\`
 
-### Connection String (appsettings.json)
-```json
+### Chaîne de Connexion (appsettings.json)
+\`\`\`json
 {
   "DatabaseConfiguration": {
     "Server": "localhost",
     "Port": 1433,
-    "Database": "your_database_name",
-    "UserId": "your_username",
-    "Password": "your_password"
+    "Database": "nom_de_votre_base",
+    "UserId": "votre_utilisateur",
+    "Password": "votre_mot_de_passe"
   }
 }
-```
+\`\`\`
 
-**Alternative: Integrated Security (Windows Authentication)**
-```json
+**Alternative : Sécurité Intégrée (Authentification Windows)**
+\`\`\`json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=your_database_name;Integrated Security=true;TrustServerCertificate=true;"
+    "DefaultConnection": "Server=localhost;Database=nom_de_votre_base;Integrated Security=true;TrustServerCertificate=true;"
   }
 }
-```
+\`\`\`
 
-### DbContext Configuration
-```csharp
+### Configuration du DbContext
+\`\`\`csharp
 protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 {
     var dbConfig = new DatabaseConfiguration();
@@ -170,121 +170,121 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     var connectionString = dbConfig.GetConnectionString();
     optionsBuilder.UseSqlServer(connectionString);
 }
-```
+\`\`\`
 
-### Migration Commands
-```bash
-# Create migration
-dotnet ef migrations add InitialCreate --project src/YourProject.Infrastructure --startup-project src/YourProject.Api
+### Commandes de Migration
+\`\`\`bash
+# Créer une migration
+dotnet ef migrations add InitialCreate --project src/VotreProjet.Infrastructure --startup-project src/VotreProjet.Api
 
-# Update database
-dotnet ef database update --project src/YourProject.Infrastructure --startup-project src/YourProject.Api
-```
+# Mettre à jour la base de données
+dotnet ef database update --project src/VotreProjet.Infrastructure --startup-project src/VotreProjet.Api
+\`\`\`
 
-### SQL Server-Specific Considerations
-- **String Length**: Max 900 bytes in indexes (for nvarchar, ~450 characters)
-- **GUID Storage**: Native uniqueidentifier type, optimal performance
-- **Case Sensitivity**: Configurable via collation (default: case-insensitive)
-- **JSON Support**: JSON functions available (SQL Server 2016+)
-- **Performance**: Excellent enterprise performance, great for Windows environments
-- **Advanced Features**: Temporal tables, in-memory OLTP, columnstore indexes
-- **Licensing**: Requires commercial license for production (except Express/Developer editions)
-- **Recommended For**: Enterprise applications, Windows-centric environments, .NET Framework legacy apps
+### Considérations Spécifiques à SQL Server
+- **Longueur des chaînes** : Maximum 900 octets dans les index (pour nvarchar, ~450 caractères)
+- **Stockage GUID** : Type uniqueidentifier natif, performance optimale
+- **Sensibilité à la casse** : Configurable via collation (par défaut : insensible à la casse)
+- **Support JSON** : Fonctions JSON disponibles (SQL Server 2016+)
+- **Performance** : Excellente performance entreprise, idéal pour les environnements Windows
+- **Fonctionnalités avancées** : Tables temporelles, OLTP en mémoire, index columnstore
+- **Licence** : Nécessite une licence commerciale pour la production (sauf éditions Express/Developer)
+- **Recommandé pour** : Applications d'entreprise, environnements Windows, applications .NET Framework héritées
 
-### SQL Server-Specific Entity Configuration Example
-```csharp
-modelBuilder.Entity<YourEntity>(entity =>
+### Exemple de Configuration d'Entité Spécifique à SQL Server
+\`\`\`csharp
+modelBuilder.Entity<VotreEntite>(entity =>
 {
     entity.Property(e => e.Id)
         .HasDefaultValueSql("NEWID()");
     
     entity.Property(e => e.Name)
-        .HasMaxLength(450) // Important for indexes
+        .HasMaxLength(450) // Important pour les index
         .IsUnicode(true);
 });
-```
+\`\`\`
 
 ---
 
-## Comparison Matrix
+## Matrice de Comparaison
 
-| Feature | MySQL/MariaDB | PostgreSQL | SQL Server |
-|---------|---------------|------------|------------|
-| **Open Source** | ✅ Yes | ✅ Yes | ❌ No (Express/Dev only) |
-| **Performance (Read)** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| **Performance (Write)** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| **JSON Support** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ |
-| **Full-Text Search** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| **Advanced Features** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
-| **ACID Compliance** | ⭐⭐⭐⭐ (InnoDB) | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
-| **Ease of Setup** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐ |
-| **Cloud Support** | Azure, AWS, GCP | Azure, AWS, GCP | Azure (native) |
-| **Cross-Platform** | ✅ Yes | ✅ Yes | ✅ Yes (2016+) |
-
----
-
-## Switching Database Providers
-
-If you need to switch to a different database provider after project creation:
-
-1. **Update Package Reference** in `Infrastructure.csproj`
-2. **Modify DbContext Configuration** in `SampleApplicationDbContext.cs` (OnConfiguring method)
-3. **Update Connection String** in `appsettings.json`
-4. **Delete Existing Migrations** folder (if any)
-5. **Create New Initial Migration**
-   ```bash
-   dotnet ef migrations add InitialCreate --project src/YourProject.Infrastructure
-   ```
-6. **Apply Migration**
-   ```bash
-   dotnet ef database update --project src/YourProject.Infrastructure
-   ```
+| Fonctionnalité | MySQL/MariaDB | PostgreSQL | SQL Server |
+|----------------|---------------|------------|------------|
+| **Open Source** | ✅ Oui | ✅ Oui | ❌ Non (Express/Dev uniquement) |
+| **Performance (Lecture)** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| **Performance (Écriture)** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| **Support JSON** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ |
+| **Recherche Plein Texte** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| **Fonctionnalités Avancées** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+| **Conformité ACID** | ⭐⭐⭐⭐ (InnoDB) | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+| **Facilité d'Installation** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐ |
+| **Support Cloud** | Azure, AWS, GCP | Azure, AWS, GCP | Azure (natif) |
+| **Multi-Plateforme** | ✅ Oui | ✅ Oui | ✅ Oui (2016+) |
 
 ---
 
-## Docker Support
+## Changement de Fournisseur de Base de Données
+
+Si vous devez changer de fournisseur de base de données après la création du projet :
+
+1. **Mettre à jour la référence du package** dans \`Infrastructure.csproj\`
+2. **Modifier la configuration du DbContext** dans \`SampleApplicationDbContext.cs\` (méthode OnConfiguring)
+3. **Mettre à jour la chaîne de connexion** dans \`appsettings.json\`
+4. **Supprimer le dossier Migrations existant** (si présent)
+5. **Créer une nouvelle migration initiale**
+   \`\`\`bash
+   dotnet ef migrations add InitialCreate --project src/VotreProjet.Infrastructure
+   \`\`\`
+6. **Appliquer la migration**
+   \`\`\`bash
+   dotnet ef database update --project src/VotreProjet.Infrastructure
+   \`\`\`
+
+---
+
+## Support Docker
 
 ### MySQL
-```yaml
+\`\`\`yaml
 services:
   mysql:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: your_password
-      MYSQL_DATABASE: your_database
+      MYSQL_ROOT_PASSWORD: votre_mot_de_passe
+      MYSQL_DATABASE: votre_base
     ports:
       - "3306:3306"
-```
+\`\`\`
 
 ### PostgreSQL
-```yaml
+\`\`\`yaml
 services:
   postgres:
     image: postgres:16
     environment:
-      POSTGRES_PASSWORD: your_password
-      POSTGRES_DB: your_database
+      POSTGRES_PASSWORD: votre_mot_de_passe
+      POSTGRES_DB: votre_base
     ports:
       - "5432:5432"
-```
+\`\`\`
 
 ### SQL Server
-```yaml
+\`\`\`yaml
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       ACCEPT_EULA: Y
-      SA_PASSWORD: YourStrong@Passw0rd
+      SA_PASSWORD: VotreMotDePasse@Fort123
     ports:
       - "1433:1433"
-```
+\`\`\`
 
 ---
 
-## Additional Resources
+## Ressources Supplémentaires
 
-- [MySQL Documentation](https://dev.mysql.com/doc/)
-- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
-- [SQL Server Documentation](https://learn.microsoft.com/en-us/sql/sql-server/)
-- [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
+- [Documentation MySQL](https://dev.mysql.com/doc/)
+- [Documentation PostgreSQL](https://www.postgresql.org/docs/)
+- [Documentation SQL Server](https://learn.microsoft.com/fr-fr/sql/sql-server/)
+- [Entity Framework Core](https://learn.microsoft.com/fr-fr/ef/core/)
