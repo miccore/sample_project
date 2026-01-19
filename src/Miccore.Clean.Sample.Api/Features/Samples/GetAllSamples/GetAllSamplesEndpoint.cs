@@ -18,6 +18,7 @@ public class GetAllSamplesEndpoint(IMediator _mediator) : BaseEndpoint<GetAllSam
     {
         Get(BuildRoute("samples"));
         AllowAnonymous();
+        ConfigureSwaggerTags();
     }
 
     /// <summary>

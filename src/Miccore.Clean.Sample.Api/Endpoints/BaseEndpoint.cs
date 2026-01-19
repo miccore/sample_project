@@ -1,8 +1,12 @@
+using Miccore.Clean.Sample.Api.Helpers;
+
 namespace Miccore.Clean.Sample.Api.Endpoints;
+
 
 /// <summary>
 /// Base endpoint providing common functionality for all API endpoints.
-/// Handles validation failures, exception handling (via middleware), and standardized response formatting.
+/// Handles validation failures and standardized response formatting.
+/// Exception handling is managed by ExceptionHandlingMiddleware.
 /// </summary>
 /// <typeparam name="TRequest">The request type.</typeparam>
 /// <typeparam name="TResponse">The response type.</typeparam>
@@ -17,16 +21,36 @@ public abstract class BaseEndpoint<TRequest, TResponse> : Endpoint<TRequest, Api
     protected virtual string ApiVersion => "v1";
 
     /// <summary>
+    /// Gets the feature group name for Swagger grouping.
+    /// Automatically extracted from the namespace using FeatureHelper.
+    /// Override to customize the group name.
+    /// </summary>
+    protected virtual string FeatureGroup => FeatureHelper.GetFeatureGroup(GetType());
+
+    /// <summary>
     /// Gets the base route prefix for versioned API endpoints.
     /// </summary>
-    protected string VersionedRoutePrefix => $"api/{ApiVersion}";
+    protected string VersionedRoutePrefix => $"{ApiVersion}";
 
     /// <summary>
     /// Builds the full versioned route.
     /// </summary>
     /// <param name="route">The relative route (e.g., "samples" or "samples/{id}").</param>
-    /// <returns>The full versioned route (e.g., "api/v1/samples").</returns>
+    /// <returns>The full versioned route (e.g., "v1/samples").</returns>
     protected string BuildRoute(string route) => $"{VersionedRoutePrefix}/{route.TrimStart('/')}";
+
+    /// <summary>
+    /// Configures Swagger tags for this endpoint based on the feature group.
+    /// Call this at the end of Configure() in derived classes.
+    /// </summary>
+    protected void ConfigureSwaggerTags()
+    {
+        Options(x =>
+        {
+            x.WithTags(FeatureGroup);
+            x.WithGroupName(FeatureGroup);
+        });
+    }
 
     /// <summary>
     /// Handles the request by checking validation and delegating to the derived implementation.
@@ -120,14 +144,30 @@ public abstract class BaseEndpoint<TRequest> : Endpoint<TRequest>
     protected virtual string ApiVersion => "v1";
 
     /// <summary>
+    /// Gets the feature group name for Swagger grouping.
+    /// Automatically extracted from the namespace using FeatureHelper.
+    /// Override to customize the group name.
+    /// </summary>
+    protected virtual string FeatureGroup => FeatureHelper.GetFeatureGroup(GetType());
+
+    /// <summary>
     /// Gets the base route prefix for versioned API endpoints.
     /// </summary>
-    protected string VersionedRoutePrefix => $"api/{ApiVersion}";
+    protected string VersionedRoutePrefix => $"{ApiVersion}";
 
     /// <summary>
     /// Builds the full versioned route.
     /// </summary>
     protected string BuildRoute(string route) => $"{VersionedRoutePrefix}/{route.TrimStart('/')}";
+
+    /// <summary>
+    /// Configures Swagger tags for this endpoint based on the feature group.
+    /// Call this at the end of Configure() in derived classes.
+    /// </summary>
+    protected void ConfigureSwaggerTags()
+    {
+        Options(x => x.WithTags(FeatureGroup));
+    }
 
     /// <summary>
     /// Handles the request by checking validation and delegating to the derived implementation.
@@ -174,14 +214,30 @@ public abstract class BaseEndpointWithoutRequest<TResponse> : EndpointWithoutReq
     protected virtual string ApiVersion => "v1";
 
     /// <summary>
+    /// Gets the feature group name for Swagger grouping.
+    /// Automatically extracted from the namespace using FeatureHelper.
+    /// Override to customize the group name.
+    /// </summary>
+    protected virtual string FeatureGroup => FeatureHelper.GetFeatureGroup(GetType());
+
+    /// <summary>
     /// Gets the base route prefix for versioned API endpoints.
     /// </summary>
-    protected string VersionedRoutePrefix => $"api/{ApiVersion}";
+    protected string VersionedRoutePrefix => $"{ApiVersion}";
 
     /// <summary>
     /// Builds the full versioned route.
     /// </summary>
     protected string BuildRoute(string route) => $"{VersionedRoutePrefix}/{route.TrimStart('/')}";
+
+    /// <summary>
+    /// Configures Swagger tags for this endpoint based on the feature group.
+    /// Call this at the end of Configure() in derived classes.
+    /// </summary>
+    protected void ConfigureSwaggerTags()
+    {
+        Options(x => x.WithTags(FeatureGroup));
+    }
 
     /// <summary>
     /// Sends a successful response with HTTP 200 OK.

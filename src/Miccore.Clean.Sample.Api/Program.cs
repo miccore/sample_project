@@ -22,7 +22,7 @@ try
 
     // Add services
     builder.Services
-        .AddEndpointServices()
+        .AddEndpointServices(builder.Configuration)
         .AddApplication(builder.Configuration)
         .AddInfrastructure(builder.Configuration)
         .AddHealthCheckServices();

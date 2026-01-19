@@ -18,6 +18,7 @@ public sealed class DeleteSampleEndpoint(IMediator _mediator) : BaseEndpoint<Del
     {
         Delete(BuildRoute("samples/{id}"));
         AllowAnonymous();
+        ConfigureSwaggerTags();
     }
 
     /// <summary>

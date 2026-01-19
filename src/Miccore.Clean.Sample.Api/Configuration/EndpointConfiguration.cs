@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using Scalar.AspNetCore;
 
 namespace Miccore.Clean.Sample.Api.Configuration;
@@ -10,10 +11,27 @@ public static class EndpointConfiguration
     /// <summary>
     /// Adds FastEndpoints and Swagger documentation services.
     /// </summary>
-    public static IServiceCollection AddEndpointServices(this IServiceCollection services)
+    public static IServiceCollection AddEndpointServices(this IServiceCollection services, IConfiguration configuration)
     {
+        // Configure API options from configuration
+        services.Configure<ApiOptions>(configuration.GetSection(ApiOptions.SectionName));
+
+        var apiOptions = configuration.GetSection(ApiOptions.SectionName).Get<ApiOptions>() ?? new ApiOptions();
+
         services.AddOpenApi();
-        services.AddFastEndpoints().SwaggerDocument();
+        services.AddFastEndpoints().SwaggerDocument(o =>
+        {
+            o.DocumentSettings = s =>
+            {
+                s.DocumentName = apiOptions.DefaultVersion;
+                s.Title = apiOptions.SwaggerTitle;
+                s.Version = apiOptions.DefaultVersion;
+                s.Description = apiOptions.SwaggerDescription;
+            };
+            o.EnableJWTBearerAuth = true;
+            o.ShortSchemaNames = true;
+            o.ExcludeNonFastEndpoints = true;
+        });
 
         return services;
     }
@@ -23,9 +41,11 @@ public static class EndpointConfiguration
     /// </summary>
     public static IApplicationBuilder UseEndpointConfiguration(this IApplicationBuilder app)
     {
+        var apiOptions = app.ApplicationServices.GetService<IOptions<ApiOptions>>()?.Value ?? new ApiOptions();
+
         app.UseFastEndpoints(c =>
         {
-            c.Endpoints.RoutePrefix = "api";
+            c.Endpoints.RoutePrefix = apiOptions.RoutePrefix;
         }).UseSwaggerGen();
 
         return app;
@@ -36,7 +56,9 @@ public static class EndpointConfiguration
     /// </summary>
     public static IEndpointRouteBuilder MapApiDocumentation(this IEndpointRouteBuilder app, IWebHostEnvironment environment)
     {
-        if (environment.IsDevelopment())
+        var apiOptions = app.ServiceProvider.GetService<IOptions<ApiOptions>>()?.Value ?? new ApiOptions();
+
+        if (environment.IsDevelopment() && apiOptions.EnableSwagger)
         {
             app.MapScalarApiReference();
         }

@@ -18,6 +18,7 @@ public class CreateSampleEndpoint(IMediator _mediator) : BaseEndpoint<CreateSamp
     {
         Post(BuildRoute("samples"));
         AllowAnonymous();
+        ConfigureSwaggerTags();
     }
 
     /// <summary>

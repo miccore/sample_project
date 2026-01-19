@@ -18,6 +18,7 @@ public sealed class UpdateSampleEndpoint(IMediator _mediator) : BaseEndpoint<Upd
     {
         Put(BuildRoute("samples/{id}"));
         AllowAnonymous();
+        ConfigureSwaggerTags();
     }
 
     /// <summary>
